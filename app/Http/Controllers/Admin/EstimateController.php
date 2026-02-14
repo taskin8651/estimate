@@ -112,6 +112,7 @@ public function show(Estimate $estimate)
 
 
 
+
     // 📌 Delete
     public function destroy(Estimate $estimate)
     {
