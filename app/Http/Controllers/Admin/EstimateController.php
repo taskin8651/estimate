@@ -92,14 +92,23 @@ class EstimateController extends Controller
     }
 
     // 📌 Show
-    public function show(Estimate $estimate)
+public function show(Estimate $estimate)
 {
-    $estimate->load('client', 'items');
-    $setting = Setting::first();
+    // 🔐 Security check (estimate sirf apna hi open ho)
+    if ($estimate->created_by != auth()->id()) {
+        abort(403);
+    }
 
-      $template = 'admin.estimates.templates.' . $estimate->template;
-    return view('admin.estimates.show', compact('estimate','setting', 'template'));
+    $estimate->load('client', 'items');
+
+    // 🔹 User-wise setting
+    $setting = Setting::where('created_by', auth()->id())->first();
+
+    $template = 'admin.estimates.templates.' . $estimate->template;
+
+    return view('admin.estimates.show', compact('estimate', 'setting', 'template'));
 }
+
 
 
 

@@ -10,10 +10,12 @@ class SettingController extends Controller
 {
     public function index()
     {
-        $setting = Setting::first();
+        $setting = Setting::where('created_by', auth()->id())->first();
 
         if (!$setting) {
-            $setting = Setting::create([]);
+            $setting = Setting::create([
+                'created_by' => auth()->id()
+            ]);
         }
 
         return view('admin.settings.index', compact('setting'));
@@ -27,24 +29,27 @@ class SettingController extends Controller
             'company_logo' => 'nullable|image|max:2048'
         ]);
 
-        $setting = Setting::first();
+        $setting = Setting::where('created_by', auth()->id())->first();
 
-        if ($request->hasFile('company_logo')) {
-
-            $path = $request->file('company_logo')
-                ->store('company', 'public');
-
-            $setting->company_logo = $path;
+        if (!$setting) {
+            $setting = Setting::create([
+                'created_by' => auth()->id()
+            ]);
         }
 
-        $setting->update([
-            'company_name' => $request->company_name,
-            'company_email' => $request->company_email,
-            'company_phone' => $request->company_phone,
-            'company_address' => $request->company_address,
-        ]);
+        $data = [
+            'company_name'   => $request->company_name,
+            'company_email'  => $request->company_email,
+            'company_phone'  => $request->company_phone,
+            'company_address'=> $request->company_address,
+        ];
 
-        $setting->save();
+        if ($request->hasFile('company_logo')) {
+            $data['company_logo'] = $request->file('company_logo')
+                                ->store('company', 'public');
+        }
+
+        $setting->update($data);
 
         return back()->with('success', 'Settings Updated Successfully');
     }
