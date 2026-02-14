@@ -1,21 +1,20 @@
-<div class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+<div class="max-w-6xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden border border-yellow-200">
 
-    {{-- ================= GRADIENT HEADER ================= --}}
-    <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 
-                text-white px-10 py-10 flex justify-between items-center">
+    {{-- ================= HEADER ================= --}}
+    <div class="px-10 py-10 border-b border-yellow-200 flex justify-between items-center bg-gradient-to-r from-yellow-50 to-white">
 
         <div class="flex items-center gap-4">
             @if($setting->company_logo)
                 <img src="{{ asset('storage/'.$setting->company_logo) }}"
-                     class="h-14 bg-white p-1 rounded-md">
+                     class="h-14">
             @endif
 
             <div>
-                <h1 class="text-3xl font-semibold">
+                <h1 class="text-3xl font-semibold text-gray-800 tracking-wide">
                     {{ $setting->company_name }}
                 </h1>
-                <p class="text-sm opacity-80">
-                    Estimate Document
+                <p class="text-sm text-yellow-700 tracking-wider uppercase">
+                    Premium Estimate
                 </p>
             </div>
         </div>
@@ -32,16 +31,15 @@
     </div>
 
 
-    {{-- ================= CLIENT + ESTIMATE INFO ================= --}}
-    <div class="grid grid-cols-2 gap-10 px-10 py-10 border-b border-gray-200">
+    {{-- ================= CLIENT SECTION ================= --}}
+    <div class="grid grid-cols-2 gap-10 px-10 py-10 border-b border-yellow-200">
 
-        {{-- CLIENT --}}
         <div>
-            <h3 class="text-xs uppercase text-gray-400 font-semibold mb-3 tracking-wider">
+            <h3 class="text-xs uppercase text-yellow-700 font-semibold mb-3 tracking-widest">
                 Bill To
             </h3>
 
-            <p class="font-semibold text-gray-800 text-lg">
+            <p class="font-semibold text-lg text-gray-800">
                 {{ $estimate->client->name }}
             </p>
 
@@ -58,30 +56,24 @@
             </p>
         </div>
 
-        {{-- ESTIMATE BOX --}}
         <div class="flex justify-end">
-            <div class="w-80 bg-gray-50 rounded-lg shadow-sm p-6">
+            <div class="w-80 p-6 border border-yellow-300 rounded-lg bg-yellow-50">
 
                 <div class="flex justify-between text-sm mb-3">
-                    <span class="text-gray-500">Estimate #</span>
-                    <span class="font-medium">{{ $estimate->estimate_number }}</span>
-                </div>
-
-                <div class="flex justify-between text-sm mb-3">
-                    <span class="text-gray-500">Issue Date</span>
+                    <span class="text-gray-600">Issue Date</span>
                     <span>{{ $estimate->issue_date }}</span>
                 </div>
 
                 <div class="flex justify-between text-sm mb-3">
-                    <span class="text-gray-500">Expiry Date</span>
+                    <span class="text-gray-600">Expiry Date</span>
                     <span>{{ $estimate->expiry_date ?? '-' }}</span>
                 </div>
 
-                <div class="border-t mt-4 pt-4 text-right">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">
+                <div class="border-t border-yellow-300 mt-4 pt-4 text-right">
+                    <p class="text-xs uppercase text-gray-500 tracking-wide">
                         Grand Total
                     </p>
-                    <p class="text-2xl font-bold text-indigo-600">
+                    <p class="text-3xl font-bold text-yellow-700">
                         ₹ {{ number_format($estimate->total,2) }}
                     </p>
                 </div>
@@ -95,28 +87,20 @@
     {{-- ================= TABLE ================= --}}
     <div class="px-10 py-10">
 
-        <table class="w-full text-sm border-collapse">
+        <table class="w-full text-sm border border-yellow-200">
 
-            <thead class="bg-gray-100">
+            <thead class="bg-yellow-100 text-yellow-900">
                 <tr>
-                    <th class="p-4 text-left font-semibold text-gray-700">
-                        Services
-                    </th>
-                    <th class="p-4 text-right font-semibold text-gray-700">
-                        Qty
-                    </th>
-                    <th class="p-4 text-right font-semibold text-gray-700">
-                        Rate
-                    </th>
-                    <th class="p-4 text-right font-semibold text-gray-700">
-                        Amount
-                    </th>
+                    <th class="p-4 border text-left">Services</th>
+                    <th class="p-4 border text-right">Qty</th>
+                    <th class="p-4 border text-right">Rate</th>
+                    <th class="p-4 border text-right">Amount</th>
                 </tr>
             </thead>
 
             <tbody>
                 @foreach($estimate->items as $item)
-                <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
+                <tr class="border-t border-yellow-200 hover:bg-yellow-50 transition">
 
                     <td class="p-4">
                         <p class="font-medium text-gray-800">
@@ -135,7 +119,7 @@
                         ₹ {{ number_format($item->rate,2) }}
                     </td>
 
-                    <td class="p-4 text-right font-semibold text-indigo-600">
+                    <td class="p-4 text-right font-semibold text-yellow-700">
                         ₹ {{ number_format($item->amount,2) }}
                     </td>
 
@@ -151,7 +135,7 @@
     {{-- ================= SUMMARY ================= --}}
     <div class="flex justify-end px-10 pb-10">
 
-        <div class="w-80 space-y-3">
+        <div class="w-80 space-y-3 border border-yellow-200 p-6 rounded-lg bg-yellow-50">
 
             <div class="flex justify-between text-sm">
                 <span class="text-gray-600">Subtotal</span>
@@ -165,7 +149,7 @@
                 <span>₹ {{ number_format($estimate->tax_amount,2) }}</span>
             </div>
 
-            <div class="flex justify-between border-t pt-4 text-xl font-bold text-indigo-600">
+            <div class="flex justify-between border-t border-yellow-300 pt-4 text-xl font-bold text-yellow-700">
                 <span>Total</span>
                 <span>₹ {{ number_format($estimate->total,2) }}</span>
             </div>
@@ -177,9 +161,9 @@
 
     {{-- ================= NOTES ================= --}}
     @if($estimate->notes)
-    <div class="px-10 pb-10 border-t border-gray-200">
+    <div class="px-10 pb-10 border-t border-yellow-200">
 
-        <h4 class="text-xs uppercase text-gray-400 font-semibold mb-3 tracking-wide">
+        <h4 class="text-xs uppercase text-yellow-700 font-semibold mb-3 tracking-widest">
             Notes
         </h4>
 

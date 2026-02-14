@@ -32,9 +32,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Estimates
    Route::resource('estimates', \App\Http\Controllers\Admin\EstimateController::class);
 
-   Route::get('estimates/{estimate}/send',
+   
+
+Route::post('estimates/{estimate}/send',
     [\App\Http\Controllers\Admin\EstimateController::class, 'sendEstimate']
 )->name('estimates.send');
+
 
 Route::get('settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])
     ->name('settings.index');

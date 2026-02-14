@@ -96,9 +96,10 @@ class EstimateController extends Controller
     $setting = Setting::first();
 
       $template = 'admin.estimates.templates.' . $estimate->template;
-
     return view('admin.estimates.show', compact('estimate','setting', 'template'));
 }
+
+
 
     // 📌 Delete
     public function destroy(Estimate $estimate)
@@ -111,13 +112,21 @@ class EstimateController extends Controller
 public function downloadPdf(Estimate $estimate)
 {
     $estimate->load('client', 'items');
+    $setting = Setting::first();
 
-    $pdf = Pdf::loadView('admin.estimates.pdf', compact('estimate'));
+    $template = $estimate->template ?? 'classic';
+
+    $viewPath = 'admin.estimates.pdf.' . $template;
+
+    if (!view()->exists($viewPath)) {
+        $viewPath = 'admin.estimates.templates.classic';
+    }
+
+    $pdf = Pdf::loadView($viewPath, compact('estimate','setting'))
+        ->setPaper('a4', 'portrait');
 
     return $pdf->download('Estimate-'.$estimate->estimate_number.'.pdf');
 }
-
-
 
 public function sendEstimate(Estimate $estimate)
 {
@@ -133,12 +142,12 @@ public function sendEstimate(Estimate $estimate)
     return back()->with('success','Estimate Sent Successfully');
 }
 
+
 public function changeTemplate(Request $request, Estimate $estimate)
 {
     $estimate->update([
         'template' => $request->template
     ]);
-    // dd($request->template);
 
     return back();
 }

@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Setting;
 
 class EstimateMail extends Mailable
@@ -22,20 +21,19 @@ class EstimateMail extends Mailable
     {
         $setting = Setting::first();
 
-        $pdf = Pdf::loadView('admin.estimates.pdf', [
-            'estimate' => $this->estimate,
-            'setting' => $setting
-        ]);
-
-        return $this->subject('Estimate '.$this->estimate->estimate_number)
+        return $this->from(
+                config('mail.from.address'),
+                $setting->company_name ?? config('app.name')
+            )
+            ->replyTo($setting->company_email)
+            ->subject(
+                'Estimate #' . $this->estimate->estimate_number .
+                ' from ' . ($setting->company_name ?? config('app.name'))
+            )
             ->view('emails.estimate')
             ->with([
                 'estimate' => $this->estimate,
-                'setting' => $setting
-            ])
-            ->attachData(
-                $pdf->output(),
-                'Estimate-'.$this->estimate->estimate_number.'.pdf'
-            );
+                'setting'  => $setting
+            ]);
     }
 }
