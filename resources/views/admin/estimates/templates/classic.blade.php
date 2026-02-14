@@ -1,4 +1,7 @@
-<div class="max-w-6xl mx-auto bg-white rounded shadow overflow-hidden">
+<div class="w-full overflow-x-auto">
+
+    <div class="min-w-[1000px] mx-auto bg-white rounded shadow overflow-hidden
+                scale-[0.85] sm:scale-[0.9] md:scale-100 origin-top">
 
     {{-- ================= TOP HEADER ================= --}}
     <div class="flex justify-between items-center px-10 py-8 border-b">
@@ -151,24 +154,23 @@
 
     </div>
 
-    {{-- ================= NOTES ================= --}}
-@if($estimate->notes)
-<div class="px-10 pb-10">
+    {{-- NOTES --}}
+    @if($estimate->notes)
+    <div class="px-10 pb-10">
 
-    <div class="bg-gray-50 border rounded p-6">
+        <div class="bg-gray-50 border rounded p-6">
+            <h4 class="text-sm uppercase text-gray-500 font-semibold mb-3">
+                Notes
+            </h4>
 
-        <h4 class="text-sm uppercase text-gray-500 font-semibold mb-3">
-            Notes
-        </h4>
-
-        <p class="text-sm text-gray-700 leading-relaxed">
-            {{ $estimate->notes }}
-        </p>
+            <p class="text-sm text-gray-700 leading-relaxed">
+                {{ $estimate->notes }}
+            </p>
+        </div>
 
     </div>
+    @endif
 
-</div>
-@endif
-
+    </div>
 
 </div>
