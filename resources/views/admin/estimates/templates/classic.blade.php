@@ -1,6 +1,6 @@
 <div class="w-full overflow-x-auto">
 
-    <div class="min-w-[1000px] mx-auto bg-white rounded shadow overflow-hidden
+    <div class="min-w-[100px] mx-auto bg-white rounded shadow overflow-hidden
                 scale-[1] sm:scale-[1] md:scale-1 origin-top">
 
     {{-- ================= TOP HEADER ================= --}}
