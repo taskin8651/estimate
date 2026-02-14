@@ -35,7 +35,7 @@
 
 <body class="bg-gray-100 text-gray-800">
 
-<div class="flex min-h-screen">
+<div x-data="{ sidebarOpen: false }" class="flex min-h-screen">
 
     {{-- SIDEBAR --}}
     @include('partials.menu')
@@ -48,7 +48,7 @@
 
     {{-- LEFT --}}
     <div class="flex items-center gap-4">
-        <button class="lg:hidden">
+<button @click="sidebarOpen = true" class="lg:hidden">
             <i class="fas fa-bars text-xl"></i>
         </button>
 

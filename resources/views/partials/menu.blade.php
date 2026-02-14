@@ -1,6 +1,10 @@
 <aside
-    class="w-64 bg-slate-900 text-slate-100 min-h-screen hidden lg:flex flex-col
-           transition-all duration-300 ease-in-out">
+    x-cloak
+    class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-100 flex flex-col
+           transform transition-transform duration-300 ease-in-out
+           -translate-x-full lg:translate-x-0 lg:static"
+    :class="sidebarOpen ? 'translate-x-0' : ''">
+
 
     {{-- BRAND --}}
     <div class="px-6 py-4 text-xl font-semibold border-b border-slate-700
