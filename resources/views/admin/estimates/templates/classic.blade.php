@@ -1,7 +1,7 @@
 <div class="w-full overflow-x-auto">
 
     <div class="min-w-[1000px] mx-auto bg-white rounded shadow overflow-hidden
-                scale-[0.85] sm:scale-[0.9] md:scale-100 origin-top">
+                scale-[1] sm:scale-[1] md:scale-1 origin-top">
 
     {{-- ================= TOP HEADER ================= --}}
     <div class="flex justify-between items-center px-10 py-8 border-b">
