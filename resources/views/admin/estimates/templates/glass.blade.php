@@ -1,79 +1,97 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 py-14">
+<div class="w-full bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 py-4 px-3">
 
-    <div class="max-w-6xl mx-auto backdrop-blur-xl bg-white/70 rounded-2xl shadow-2xl p-10 border border-white/40">
+    <div class="w-full max-w-4xl mx-auto 
+                bg-white/40 backdrop-blur-2xl 
+                border border-white/50 
+                rounded-lg shadow-xl overflow-hidden">
 
-        {{-- ================= HEADER ================= --}}
-        <div class="flex justify-between items-center mb-10">
 
-            <div class="flex items-center gap-4">
+        {{-- ================= TOP HEADER ================= --}}
+        <div class="px-6 py-6 border-b border-white/40 flex justify-between items-center">
+
+            <div class="flex items-center gap-3">
                 @if($setting->company_logo)
                     <img src="{{ asset('storage/'.$setting->company_logo) }}"
-                         class="h-14 rounded-md">
+                         class="h-12 bg-white/60 p-1 rounded shadow">
                 @endif
 
-                <div>
-                    <h1 class="text-2xl font-semibold text-gray-800">
+                <div class="text-sm hidden sm:block">
+                    <h1 class="text-lg font-bold text-gray-900 uppercase tracking-wide">
                         {{ $setting->company_name }}
                     </h1>
-                    <p class="text-sm text-gray-500">
-                        Estimate Document
+                    <p class="text-xs text-gray-700">
+                        {{ $setting->company_address }}
+                    </p>
+                    <p class="text-xs text-gray-700">
+                        {{ $setting->company_email }} | {{ $setting->company_phone }}
                     </p>
                 </div>
             </div>
 
-            <div class="text-right">
-                 <p class="font-semibold text-gray-800">
-                {{ $setting->company_name }}
-            </p>
-            <p>{{ $setting->company_address }}</p>
-            <p>{{ $setting->company_email }}</p>
-            <p>{{ $setting->company_phone }}</p>
+            <div class="text-right text-xs text-gray-800 leading-5">
+                <p class="font-medium">
+                    {{ $setting->company_name }}
+                </p>
+                <p>{{ $setting->company_address }}</p>
+                <p>{{ $setting->company_email }}</p>
+                <p>{{ $setting->company_phone }}</p>
             </div>
 
         </div>
 
 
         {{-- ================= CLIENT + ESTIMATE ================= --}}
-        <div class="grid grid-cols-2 gap-10 mb-10">
+        <div class="grid grid-cols-2 gap-6 px-4 sm:px-6 py-5 border-b border-white/40 text-[11px]">
 
+            {{-- CLIENT --}}
             <div>
-                <h3 class="text-xs uppercase text-gray-500 font-semibold mb-3">
+                <h3 class="uppercase text-gray-700 font-semibold mb-2 tracking-wide text-[11px]">
                     Bill To
                 </h3>
 
-                <p class="font-semibold text-gray-800">
+                <p class="font-semibold text-gray-900">
                     {{ $estimate->client->name }}
                 </p>
 
-                <p class="text-sm text-gray-600">
+                <p class="text-xs text-gray-700">
                     {{ $estimate->client->address }}
                 </p>
 
-                <p class="text-sm text-gray-600">
+                <p class="text-xs text-gray-700">
                     {{ $estimate->client->email }}
                 </p>
 
-                <p class="text-sm text-gray-600">
+                <p class="text-xs text-gray-700">
                     {{ $estimate->client->phone }}
                 </p>
             </div>
 
-            <div class="flex justify-end">
-                <div class="w-72 p-6 bg-white/60 rounded-xl border border-white/40 shadow">
 
-                    <div class="flex justify-between text-sm mb-2">
-                        <span>Issue Date</span>
+            {{-- ESTIMATE BOX --}}
+            <div class="flex justify-end">
+                <div class="w-60 sm:w-64 p-4 
+                            bg-white/50 backdrop-blur-xl
+                            border border-white/50 
+                            rounded-lg text-[11px] shadow">
+
+                    <div class="flex justify-between mb-1">
+                        <span class="text-gray-700">Estimate #</span>
+                        <span class="font-medium">{{ $estimate->estimate_number }}</span>
+                    </div>
+
+                    <div class="flex justify-between mb-1">
+                        <span class="text-gray-700">Issue Date</span>
                         <span>{{ $estimate->issue_date }}</span>
                     </div>
 
-                    <div class="flex justify-between text-sm mb-2">
-                        <span>Expiry</span>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-gray-700">Expiry Date</span>
                         <span>{{ $estimate->expiry_date ?? '-' }}</span>
                     </div>
 
-                    <div class="border-t mt-4 pt-3 text-right">
-                        <p class="text-xs text-gray-500">Grand Total</p>
-                        <p class="text-xl font-bold text-purple-600">
+                    <div class="border-t border-white/40 mt-3 pt-2 text-right">
+                        <p class="text-[10px] text-gray-700">Grand Total</p>
+                        <p class="text-base font-bold text-indigo-600">
                             ₹ {{ number_format($estimate->total,2) }}
                         </p>
                     </div>
@@ -85,57 +103,86 @@
 
 
         {{-- ================= TABLE ================= --}}
-        <table class="w-full text-sm mb-10">
+        <div class="px-4 sm:px-6 py-5">
 
-            <thead class="border-b border-gray-300 text-gray-600">
-                <tr>
-                    <th class="py-3 text-left">Services</th>
-                    <th class="py-3 text-right">Qty</th>
-                    <th class="py-3 text-right">Rate</th>
-                    <th class="py-3 text-right">Amount</th>
-                </tr>
-            </thead>
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs border border-white/50 border-collapse bg-white/40 backdrop-blur-xl">
 
-            <tbody>
-                @foreach($estimate->items as $item)
-                <tr class="border-b border-white/40">
-                    <td class="py-4">
-                        <p class="font-medium text-gray-800">
-                            {{ $item->title }}
-                        </p>
-                        <p class="text-xs text-gray-500">
-                            {{ $item->description }}
-                        </p>
-                    </td>
+                    <thead class="bg-white/60 text-[12px]">
+                        <tr>
+                            <th class="p-2 border border-white/40 text-left font-semibold text-gray-800">
+                                Services
+                            </th>
+                            <th class="p-2 border border-white/40 text-right font-semibold text-gray-800">
+                                Qty
+                            </th>
+                            <th class="p-2 border border-white/40 text-right font-semibold text-gray-800">
+                                Rate
+                            </th>
+                            <th class="p-2 border border-white/40 text-right font-semibold text-gray-800">
+                                Amount
+                            </th>
+                        </tr>
+                    </thead>
 
-                    <td class="py-4 text-right">
-                        {{ $item->quantity }}
-                    </td>
+                    <tbody>
+                        @foreach($estimate->items as $item)
+                        <tr>
+                            <td class="p-2 border border-white/40">
+                                <p class="font-medium text-gray-900">
+                                    {{ $item->title }}
+                                </p>
+                                <p class="text-[10px] text-gray-700">
+                                    {{ $item->description }}
+                                </p>
+                            </td>
 
-                    <td class="py-4 text-right">
-                        ₹ {{ number_format($item->rate,2) }}
-                    </td>
+                            <td class="p-2 border border-white/40 text-right">
+                                {{ $item->quantity }}
+                            </td>
 
-                    <td class="py-4 text-right font-semibold">
-                        ₹ {{ number_format($item->amount,2) }}
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
+                            <td class="p-2 border border-white/40 text-right">
+                                ₹ {{ number_format($item->rate,2) }}
+                            </td>
 
-        </table>
+                            <td class="p-2 border border-white/40 text-right font-semibold text-indigo-600">
+                                ₹ {{ number_format($item->amount,2) }}
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
 
 
         {{-- ================= SUMMARY ================= --}}
-        <div class="flex justify-end mb-10">
+        <div class="flex justify-end px-4 sm:px-6 pb-6">
 
-            <div class="w-72 space-y-2 text-right">
-                <p>Subtotal: ₹ {{ number_format($estimate->subtotal,2) }}</p>
-                <p>Tax: ₹ {{ number_format($estimate->tax_amount,2) }}</p>
+            <div class="w-60 sm:w-64 
+                        bg-white/50 backdrop-blur-xl
+                        border border-white/50 
+                        p-4 text-xs rounded-lg shadow">
 
-                <p class="text-xl font-bold text-purple-600 border-t pt-2">
-                    ₹ {{ number_format($estimate->total,2) }}
-                </p>
+                <div class="flex justify-between py-1">
+                    <span class="text-gray-700">Subtotal</span>
+                    <span>₹ {{ number_format($estimate->subtotal,2) }}</span>
+                </div>
+
+                <div class="flex justify-between py-1">
+                    <span class="text-gray-700">
+                        Tax ({{ $estimate->tax_percentage }}%)
+                    </span>
+                    <span>₹ {{ number_format($estimate->tax_amount,2) }}</span>
+                </div>
+
+                <div class="flex justify-between py-2 border-t border-white/40 font-bold text-sm text-indigo-600">
+                    <span>Total</span>
+                    <span>₹ {{ number_format($estimate->total,2) }}</span>
+                </div>
+
             </div>
 
         </div>
@@ -143,13 +190,16 @@
 
         {{-- ================= NOTES ================= --}}
         @if($estimate->notes)
-        <div class="border-t pt-6">
-            <h4 class="text-xs uppercase text-gray-500 font-semibold mb-3">
+        <div class="px-4 sm:px-6 pb-6 border-t border-white/40">
+
+            <h4 class="uppercase text-gray-700 font-semibold mb-2 tracking-wide text-[11px]">
                 Notes
             </h4>
-            <p class="text-sm text-gray-700">
+
+            <p class="text-xs text-gray-800">
                 {{ $estimate->notes }}
             </p>
+
         </div>
         @endif
 

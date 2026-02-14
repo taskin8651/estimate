@@ -141,7 +141,7 @@
 
 
         {{-- CONTENT --}}
-        <main class="flex-1 p-6">
+        <main class="flex-1 p-sm-6 py-3">
 
             {{-- SUCCESS --}}
             @if(session('message'))
