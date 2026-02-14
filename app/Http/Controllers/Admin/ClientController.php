@@ -10,10 +10,14 @@ use Illuminate\Support\Facades\Auth;
 class ClientController extends Controller
 {
     public function index()
-    {
-        $clients = Client::latest()->paginate(10);
-        return view('admin.clients.index', compact('clients'));
-    }
+{
+    $clients = Client::where('created_by', auth()->id())
+                ->latest()
+                ->paginate(10);
+
+    return view('admin.clients.index', compact('clients'));
+}
+
 
     public function create()
     {

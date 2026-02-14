@@ -19,14 +19,16 @@ use Illuminate\Support\Facades\Mail;
 class EstimateController extends Controller
 {
     // 📌 Estimate List
-    public function index()
-    {
-        $estimates = Estimate::with('client')
-                        ->latest()
-                        ->paginate(10);
+ public function index()
+{
+    $estimates = Estimate::with('client')
+                    ->where('created_by', auth()->id())
+                    ->latest()
+                    ->paginate(10);
 
-        return view('admin.estimates.index', compact('estimates'));
-    }
+    return view('admin.estimates.index', compact('estimates'));
+}
+
 
     // 📌 Create Page
     public function create()
