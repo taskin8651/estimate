@@ -87,7 +87,7 @@
         <div class="grid grid-cols-3 gap-4 mb-6">
 
             <div>
-                <label class="block mb-1 font-medium">Tax %</label>
+                <label class="block mb-1 font-medium">Vat %</label>
                 <input type="number" step="0.01" name="tax_percentage"
                        id="tax"
                        class="w-full border rounded px-3 py-2">

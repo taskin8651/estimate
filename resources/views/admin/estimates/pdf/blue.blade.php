@@ -291,7 +291,7 @@ th {
             </div>
 
             <div>
-                Tax ({{ $estimate->tax_percentage }}%)
+                Vat ({{ $estimate->tax_percentage }}%)
                 <span style="float:right;">
                     ₹ {{ number_format($estimate->tax_amount,2) }}
                 </span>

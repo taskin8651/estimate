@@ -257,7 +257,7 @@
 
             <div class="row">
                 <span style="color:#9ca3af;">
-                    Tax ({{ $estimate->tax_percentage }}%)
+                    Vat ({{ $estimate->tax_percentage }}%)
                 </span>
                 <span>₹ {{ number_format($estimate->tax_amount,2) }}</span>
             </div>

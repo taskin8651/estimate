@@ -247,7 +247,7 @@ table td{
                     <td align="right">₹ {{ number_format($estimate->subtotal,2) }}</td>
                 </tr>
                 <tr>
-                    <td>Tax ({{ $estimate->tax_percentage }}%)</td>
+                    <td>Vat ({{ $estimate->tax_percentage }}%)</td>
                     <td align="right">₹ {{ number_format($estimate->tax_amount,2) }}</td>
                 </tr>
                 <tr>

@@ -283,7 +283,7 @@ table.main td{
 
                 <tr>
                     <td>
-                        Tax ({{ $estimate->tax_percentage }}%)
+                        Vat ({{ $estimate->tax_percentage }}%)
                     </td>
                     <td class="text-right">
                         ₹ {{ number_format($estimate->tax_amount,2) }}

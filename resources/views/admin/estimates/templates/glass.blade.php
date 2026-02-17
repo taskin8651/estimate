@@ -173,7 +173,7 @@
 
                 <div class="flex justify-between py-1">
                     <span class="text-gray-700">
-                        Tax ({{ $estimate->tax_percentage }}%)
+                        Vat ({{ $estimate->tax_percentage }}%)
                     </span>
                     <span>₹ {{ number_format($estimate->tax_amount,2) }}</span>
                 </div>

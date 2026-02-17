@@ -159,7 +159,7 @@ bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
 
                 <div class="flex justify-between py-2 text-sm">
                     <span class="text-gray-400">
-                        Tax ({{ $estimate->tax_percentage }}%):
+                        Vat ({{ $estimate->tax_percentage }}%):
                     </span>
                     <span>₹ {{ number_format($estimate->tax_amount,2) }}</span>
                 </div>

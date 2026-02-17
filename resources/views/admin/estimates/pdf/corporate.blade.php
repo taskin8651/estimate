@@ -244,7 +244,7 @@
             </div>
 
             <div class="summary-row">
-                <span>Tax ({{ $estimate->tax_percentage }}%)</span>
+                <span>Vat ({{ $estimate->tax_percentage }}%)</span>
                 <span>₹ {{ number_format($estimate->tax_amount,2) }}</span>
             </div>
 
