@@ -121,31 +121,56 @@ public function show(Estimate $estimate)
     }
 
 
-public function downloadPdf(Estimate $estimate)
+public function downloadPdf($id)
 {
-    $estimate->load('client', 'items');
-    $setting = Setting::first();
+    $estimate = Estimate::with(['items','client','creator'])
+                        ->findOrFail($id);
+
+    // ✅ Get setting based on estimate creator
+    $setting = Setting::where('created_by', $estimate->created_by)
+                      ->first();
+
+    // Fallback (agar setting na mile)
+    if (!$setting) {
+        $setting = Setting::first();
+    }
 
     $template = $estimate->template ?? 'classic';
 
     $viewPath = 'admin.estimates.pdf.' . $template;
 
     if (!view()->exists($viewPath)) {
-        $viewPath = 'admin.estimates.templates.classic';
+        $viewPath = 'admin.estimates.pdf.classic';
     }
 
     $pdf = Pdf::loadView($viewPath, compact('estimate','setting'))
-        ->setPaper('a4', 'portrait');
+              ->setPaper('a4', 'portrait')
+              ->setOptions([
+                  'isHtml5ParserEnabled' => true,
+                  'isRemoteEnabled' => true,
+                  'defaultFont' => 'DejaVu Sans'
+              ]);
 
     return $pdf->download('Estimate-'.$estimate->estimate_number.'.pdf');
 }
 
+
+
 public function sendEstimate(Estimate $estimate)
 {
-    $estimate->load('client','items');
+    $estimate->load(['client','items','creator']);
+
+    // ✅ Get setting based on estimate creator
+    $setting = Setting::where('created_by', $estimate->created_by)
+                      ->first();
+
+    // fallback
+    if (!$setting) {
+        $setting = Setting::first();
+    }
 
     Mail::to($estimate->client->email)
-        ->send(new EstimateMail($estimate));
+        ->send(new EstimateMail($estimate, $setting));
 
     $estimate->update([
         'status' => 'sent'
@@ -153,6 +178,7 @@ public function sendEstimate(Estimate $estimate)
 
     return back()->with('success','Estimate Sent Successfully');
 }
+
 
 
 public function changeTemplate(Request $request, Estimate $estimate)
