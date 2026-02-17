@@ -53,7 +53,8 @@ Route::post('estimates/{estimate}/template',
     [\App\Http\Controllers\Admin\EstimateController::class, 'changeTemplate']
 )->name('estimates.changeTemplate');
 
-
+ Route::resource('mail-settings', 
+        \App\Http\Controllers\Admin\UserMailSettingController::class);
 
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

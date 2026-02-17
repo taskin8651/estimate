@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\UserMailSetting;
+use Illuminate\Support\Facades\Crypt;
+
 
 use App\Mail\EstimateMail;
 use Illuminate\Support\Facades\Mail;
@@ -155,22 +158,28 @@ public function downloadPdf($id)
 }
 
 
-
 public function sendEstimate(Estimate $estimate)
 {
-    $estimate->load(['client','items','creator']);
+    $estimate->load('client','items');
 
-    // ✅ Get setting based on estimate creator
-    $setting = Setting::where('created_by', $estimate->created_by)
-                      ->first();
+    // 🔹 Get logged-in user's SMTP
+    $setting = UserMailSetting::where('user_id', auth()->id())->first();
 
-    // fallback
-    if (!$setting) {
-        $setting = Setting::first();
+    if($setting){
+        config([
+            'mail.mailers.smtp.host' => $setting->host,
+            'mail.mailers.smtp.port' => $setting->port,
+            'mail.mailers.smtp.encryption' => $setting->encryption,
+            'mail.mailers.smtp.username' => $setting->username,
+            'mail.mailers.smtp.password' => Crypt::decrypt($setting->password),
+            'mail.from.address' => $setting->from_address,
+            'mail.from.name' => $setting->from_name,
+        ]);
     }
 
+    // 🔹 Send mail
     Mail::to($estimate->client->email)
-        ->send(new EstimateMail($estimate, $setting));
+        ->send(new EstimateMail($estimate));
 
     $estimate->update([
         'status' => 'sent'

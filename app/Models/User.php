@@ -103,4 +103,10 @@ public function estimates()
     return $this->hasMany(Estimate::class, 'created_by');
 }
 
+public function mailSetting()
+{
+    return $this->hasOne(UserMailSetting::class);
+}
+
+
 }
