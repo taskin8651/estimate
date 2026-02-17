@@ -35,10 +35,13 @@ class EstimateController extends Controller
 
     // 📌 Create Page
     public function create()
-    {
-        $clients = Client::pluck('name', 'id');
-        return view('admin.estimates.create', compact('clients'));
-    }
+{
+    $clients = Client::where('created_by', auth()->id())
+                    ->pluck('name', 'id');
+
+    return view('admin.estimates.create', compact('clients'));
+}
+
 
     // 📌 Store Estimate
     public function store(Request $request)
