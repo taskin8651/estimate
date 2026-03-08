@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\UserMailSetting;
 use Illuminate\Support\Facades\Crypt;
+use App\Models\Tax;
 
 
 use App\Mail\EstimateMail;
@@ -39,80 +40,144 @@ class EstimateController extends Controller
     $clients = Client::where('created_by', auth()->id())
                     ->pluck('name', 'id');
 
-    return view('admin.estimates.create', compact('clients'));
+    $taxes = Tax::where('created_by', auth()->id())->get();
+
+    return view('admin.estimates.create', compact('clients', 'taxes'));
 }
 
 
     // 📌 Store Estimate
-    public function store(Request $request)
-    {
-        $request->validate([
-            'client_id' => 'required',
-            'issue_date' => 'required|date',
-        ]);
+   public function store(Request $request)
+{
+    // dd($request->all());
+    $request->validate([
+        'client_id' => 'required',
+        'issue_date' => 'required|date',
+        'items' => 'required|array'
+    ]);
 
-        // 🔹 Auto Estimate Number
-        $last = Estimate::latest()->first();
-        $number = $last ? $last->id + 1 : 1;
-        $estimateNumber = 'EST-' . str_pad($number, 4, '0', STR_PAD_LEFT);
 
-        // 🔹 Calculate subtotal
-        $subtotal = 0;
-        foreach ($request->items as $item) {
-            $subtotal += $item['quantity'] * $item['rate'];
-        }
+    // 🔹 Auto Estimate Number
+    $last = Estimate::latest()->first();
+    $number = $last ? $last->id + 1 : 1;
+    $estimateNumber = 'EST-' . str_pad($number, 4, '0', STR_PAD_LEFT);
 
-        $taxPercentage = $request->tax_percentage ?? 0;
-        $taxAmount = ($subtotal * $taxPercentage) / 100;
-        $total = $subtotal + $taxAmount;
 
-        // 🔹 Create Estimate
-        $estimate = Estimate::create([
-            'estimate_number' => $estimateNumber,
-            'client_id' => $request->client_id,
-            'issue_date' => $request->issue_date,
-            'expiry_date' => $request->expiry_date,
-            'subtotal' => $subtotal,
-            'tax_percentage' => $taxPercentage,
-            'tax_amount' => $taxAmount,
-            'total' => $total,
-            'status' => 'draft',
-            'notes' => $request->notes,
-            'created_by' => Auth::id(),
-        ]);
+    // 🔹 Calculate Subtotal
+    $subtotal = 0;
 
-        // 🔹 Save Items
-        foreach ($request->items as $item) {
-            EstimateItem::create([
-                'estimate_id' => $estimate->id,
-                'title' => $item['title'],
-                'description' => $item['description'] ?? null,
-                'quantity' => $item['quantity'],
-                'rate' => $item['rate'],
-                'amount' => $item['quantity'] * $item['rate'],
-            ]);
-        }
+    foreach ($request->items as $item) {
 
-        return redirect()->route('admin.estimates.index')
-            ->with('success', 'Estimate Created Successfully');
+        $qty = $item['quantity'] ?? 0;
+        $rate = $item['rate'] ?? 0;
+
+        $subtotal += ($qty * $rate);
     }
+
+
+    // 🔹 Calculate Taxes
+    $taxAmount = 0;
+
+    if ($request->taxes) {
+
+        foreach ($request->taxes as $taxId) {
+
+            $tax = Tax::find($taxId);
+
+            if ($tax) {
+
+                $amount = ($subtotal * $tax->rate) / 100;
+
+                $taxAmount += $amount;
+
+                $taxData[] = [
+                    'tax_id' => $tax->id,
+                    'amount' => $amount
+                ];
+            }
+        }
+    }
+
+
+    // 🔹 Grand Total
+    $total = $subtotal + $taxAmount;
+
+
+    // 🔹 Create Estimate
+    $estimate = Estimate::create([
+        'estimate_number' => $estimateNumber,
+        'client_id' => $request->client_id,
+        'issue_date' => $request->issue_date,
+        'expiry_date' => $request->expiry_date,
+        'subtotal' => $subtotal,
+        'tax_amount' => $taxAmount,
+        'total' => $total,
+        'status' => 'draft',
+        'notes' => $request->notes,
+        'created_by' => Auth::id(),
+    ]);
+
+
+    // 🔹 Save Items
+    foreach ($request->items as $item) {
+
+        $qty = $item['quantity'] ?? 0;
+        $rate = $item['rate'] ?? 0;
+
+        EstimateItem::create([
+            'estimate_id' => $estimate->id,
+            'title' => $item['title'] ?? null,
+            'description' => $item['description'] ?? null,
+            'quantity' => $qty,
+            'rate' => $rate,
+            'amount' => $qty * $rate,
+        ]);
+    }
+
+
+    // 🔹 Save Taxes (pivot table)
+    if (!empty($taxData)) {
+
+        foreach ($taxData as $tax) {
+
+            $estimate->taxes()->attach($tax['tax_id'], [
+                'amount' => $tax['amount']
+            ]);
+
+        }
+
+    }
+
+
+    return redirect()
+        ->route('admin.estimates.index')
+        ->with('success', 'Estimate Created Successfully');
+}
 
     // 📌 Show
 public function show(Estimate $estimate)
 {
-    // 🔐 Security check (estimate sirf apna hi open ho)
     if ($estimate->created_by != auth()->id()) {
         abort(403);
     }
 
-    $estimate->load('client', 'items');
+    $estimate->load('client','items','taxes');
 
-    // 🔹 User-wise setting
     $setting = Setting::where('created_by', auth()->id())->first();
 
-    $template = 'admin.estimates.templates.' . $estimate->template;
+    // template name
+    $template = $estimate->template ?? 'classic';
 
-    return view('admin.estimates.show', compact('estimate', 'setting', 'template'));
+    // theme config
+    $theme = config('estimate_themes.' . $template)
+            ?? config('estimate_themes.classic');
+
+    return view('admin.estimates.templates.master', compact(
+        'estimate',
+        'setting',
+        'theme',
+        'template'
+    ));
 }
 
 
@@ -129,33 +194,36 @@ public function show(Estimate $estimate)
 
 public function downloadPdf($id)
 {
-    $estimate = Estimate::with(['items','client','creator'])
+    $estimate = Estimate::with(['items','client','creator','taxes'])
                         ->findOrFail($id);
 
-    // ✅ Get setting based on estimate creator
-    $setting = Setting::where('created_by', $estimate->created_by)
-                      ->first();
+    // Get setting based on estimate creator
+    $setting = Setting::where('created_by', $estimate->created_by)->first();
 
-    // Fallback (agar setting na mile)
     if (!$setting) {
         $setting = Setting::first();
     }
 
+    // Template name
     $template = $estimate->template ?? 'classic';
 
-    $viewPath = 'admin.estimates.pdf.' . $template;
+    // Load PDF theme config
+    $theme = config('estimate_pdf_themes.' . $template)
+            ?? config('estimate_pdf_themes.classic');
 
-    if (!view()->exists($viewPath)) {
-        $viewPath = 'admin.estimates.pdf.classic';
-    }
-
-    $pdf = Pdf::loadView($viewPath, compact('estimate','setting'))
-              ->setPaper('a4', 'portrait')
-              ->setOptions([
-                  'isHtml5ParserEnabled' => true,
-                  'isRemoteEnabled' => true,
-                  'defaultFont' => 'DejaVu Sans'
-              ]);
+    $pdf = Pdf::loadView('admin.estimates.pdf.master', [
+        'estimate' => $estimate,
+        'setting' => $setting,
+        'theme' => $theme,
+        'template' => $template
+    ])
+    ->setPaper('a4', 'portrait')
+    ->setOptions([
+        'isHtml5ParserEnabled' => true,
+        'isRemoteEnabled' => true,
+        'defaultFont' => 'DejaVu Sans',
+        'dpi' => 120
+    ]);
 
     return $pdf->download('Estimate-'.$estimate->estimate_number.'.pdf');
 }
@@ -163,7 +231,7 @@ public function downloadPdf($id)
 
 public function sendEstimate(Estimate $estimate)
 {
-    $estimate->load('client','items');
+    $estimate->load('client','items','taxes');
 
     // 🔹 Get logged-in user's SMTP
     $setting = UserMailSetting::where('user_id', auth()->id())->first();

@@ -56,6 +56,8 @@ Route::post('estimates/{estimate}/template',
  Route::resource('mail-settings', 
         \App\Http\Controllers\Admin\UserMailSettingController::class);
 
+        Route::resource('tax', \App\Http\Controllers\Admin\TaxController::class);
+
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password

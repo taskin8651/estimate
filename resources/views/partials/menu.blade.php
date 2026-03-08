@@ -100,16 +100,16 @@
             </div>
         @endcan
 
-       {{-- ================= FINANCE MENU ================= --}}
-@canany(['client_access','estimate_access'])
+     {{-- ================= FINANCE MENU ================= --}}
+@canany(['client_access','estimate_access','tax_access'])
 <div x-data="{ 
-        open: {{ request()->is('admin/clients*') || request()->is('admin/estimates*') ? 'true' : 'false' }} 
+        open: {{ request()->is('admin/clients*') || request()->is('admin/estimates*') || request()->is('admin/tax*') ? 'true' : 'false' }} 
     }">
 
     <button @click="open = !open"
             class="group w-full flex items-center justify-between px-3 py-2 rounded transition
                    hover:bg-slate-800
-                   {{ request()->is('admin/clients*') || request()->is('admin/estimates*')
+                   {{ request()->is('admin/clients*') || request()->is('admin/estimates*') || request()->is('admin/tax*')
                         ? 'bg-slate-800 text-white'
                         : '' }}">
         <span class="flex items-center gap-3">
@@ -126,6 +126,7 @@
          x-transition
          class="ml-6 mt-1 space-y-1">
 
+        {{-- Clients --}}
         @can('client_access')
             <a href="{{ route('admin.clients.index') }}"
                class="block px-3 py-2 rounded transition
@@ -136,6 +137,8 @@
             </a>
         @endcan
 
+
+        {{-- Estimates --}}
         @can('estimate_access')
             <a href="{{ route('admin.estimates.index') }}"
                class="block px-3 py-2 rounded transition
@@ -146,10 +149,21 @@
             </a>
         @endcan
 
+
+        {{-- Taxes --}}
+        @can('tax_access')
+            <a href="{{ route('admin.tax.index') }}"
+               class="block px-3 py-2 rounded transition
+               {{ request()->is('admin/tax*')
+                    ? 'bg-slate-800 text-white'
+                    : 'hover:bg-slate-800 hover:pl-4' }}">
+                Taxes
+            </a>
+        @endcan
+
     </div>
 </div>
 @endcanany
-
 
 
 {{-- ================= SETTINGS ================= --}}
