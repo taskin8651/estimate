@@ -52,9 +52,46 @@
             <i class="fas fa-bars text-xl"></i>
         </button>
 
-        <h1 class="font-semibold text-lg">
-            {{ trans('panel.site_title') }}
-        </h1>
+         {{-- COMPANY NAME --}}
+    @auth
+    <div class="text-sm text-gray-700 font-medium">
+        {{ auth()->user()->company_name ?? 'My Company' }}
+    </div>
+    @endauth
+
+
+    {{-- SUBSCRIPTION COUNTDOWN --}}
+    @auth
+    @php
+        $user = auth()->user();
+        $daysLeft = null;
+
+        if($user->trial_ends_at){
+            $daysLeft = now()->diffInDays($user->trial_ends_at, false);
+        }
+        elseif($user->subscription_ends_at){
+            $daysLeft = now()->diffInDays($user->subscription_ends_at, false);
+        }
+    @endphp
+
+  @if(!is_null($daysLeft))
+
+<div class="px-3 py-1 rounded text-xs font-medium
+{{ $daysLeft <= 0 ? 'bg-red-100 text-red-700'
+: ($daysLeft <= 3 ? 'bg-yellow-100 text-yellow-700'
+: 'bg-green-100 text-green-700') }}">
+
+@if($daysLeft <= 0)
+Expired
+@else
+{{ $daysLeft }} days left
+@endif
+
+</div>
+
+@endif
+    @endauth
+
     </div>
 
     {{-- RIGHT --}}

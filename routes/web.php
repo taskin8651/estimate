@@ -58,6 +58,13 @@ Route::post('estimates/{estimate}/template',
 
         Route::resource('tax', \App\Http\Controllers\Admin\TaxController::class);
 
+
+         Route::resource('hero', HeroController::class);
+    Route::resource('services', ServiceController::class);
+    Route::resource('pricing', PricingController::class);
+    Route::resource('testimonials', TestimonialController::class);
+    Route::resource('brands', BrandController::class);
+
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password
@@ -69,4 +76,15 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 
     }
 });
 
+Route::middleware(['auth', 'subscription'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::resource('clients', \App\Http\Controllers\Admin\ClientController::class);
+        Route::resource('estimates', \App\Http\Controllers\Admin\EstimateController::class);
+    });
+
+    Route::get('/billing', function () {
+    return view('billing.index');
+})->name('billing.index');
 

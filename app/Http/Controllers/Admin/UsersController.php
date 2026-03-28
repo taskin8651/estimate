@@ -14,14 +14,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UsersController extends Controller
 {
+
     public function index()
     {
         abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $users = User::with(['roles'])->get();
+        $users = User::with(['roles'])->latest()->get();
 
         return view('admin.users.index', compact('users'));
     }
+
 
     public function create()
     {
@@ -32,13 +34,20 @@ class UsersController extends Controller
         return view('admin.users.create', compact('roles'));
     }
 
+
     public function store(StoreUserRequest $request)
     {
-        $user = User::create($request->all());
+
+        $data = $request->all();
+
+        $user = User::create($data);
+
         $user->roles()->sync($request->input('roles', []));
 
-        return redirect()->route('admin.users.index');
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User created successfully');
     }
+
 
     public function edit(User $user)
     {
@@ -51,13 +60,25 @@ class UsersController extends Controller
         return view('admin.users.edit', compact('roles', 'user'));
     }
 
+
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->update($request->all());
+
+        $data = $request->all();
+
+        // password empty ho to remove
+        if (!$request->filled('password')) {
+            unset($data['password']);
+        }
+
+        $user->update($data);
+
         $user->roles()->sync($request->input('roles', []));
 
-        return redirect()->route('admin.users.index');
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User updated successfully');
     }
+
 
     public function show(User $user)
     {
@@ -68,17 +89,20 @@ class UsersController extends Controller
         return view('admin.users.show', compact('user'));
     }
 
+
     public function destroy(User $user)
     {
         abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $user->delete();
 
-        return back();
+        return back()->with('success','User deleted successfully');
     }
+
 
     public function massDestroy(MassDestroyUserRequest $request)
     {
+
         $users = User::find(request('ids'));
 
         foreach ($users as $user) {
@@ -87,4 +111,5 @@ class UsersController extends Controller
 
         return response(null, Response::HTTP_NO_CONTENT);
     }
+
 }
