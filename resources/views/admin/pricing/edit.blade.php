@@ -1,11 +1,11 @@
-@extends('admin.layout')
+@extends('layouts.admin')
 
 @section('content')
 <div class="p-6 max-w-xl mx-auto">
 
     <h2 class="text-2xl font-bold mb-6">Edit Plan</h2>
 
-    <form action="{{ route('pricing.update', $plan->id) }}" method="POST" class="space-y-4">
+    <form action="{{ route('admin.pricing.update', $plan->id) }}" method="POST" class="space-y-4">
         @csrf
         @method('PUT')
 
@@ -18,15 +18,25 @@
         <input type="text" name="duration" value="{{ $plan->duration }}"
             class="w-full border px-3 py-2 rounded">
 
+        <!-- TYPE -->
+        <select name="type" class="w-full border px-3 py-2 rounded">
+            <option value="intro" {{ $plan->type == 'intro' ? 'selected' : '' }}>Intro</option>
+            <option value="popular" {{ $plan->type == 'popular' ? 'selected' : '' }}>Popular</option>
+            <option value="pro" {{ $plan->type == 'pro' ? 'selected' : '' }}>Pro</option>
+        </select>
+
+        <!-- ORDER -->
+        <input type="number" name="order" value="{{ $plan->order }}"
+            class="w-full border px-3 py-2 rounded">
+
+        <!-- FEATURES -->
         <div id="features-wrapper">
             <label class="font-medium">Features</label>
 
-            @if($plan->features)
-                @foreach($plan->features as $feature)
-                    <input type="text" name="features[]" value="{{ $feature }}"
-                        class="w-full border px-3 py-2 rounded mt-2">
-                @endforeach
-            @endif
+            @foreach($plan->features ?? [] as $feature)
+                <input type="text" name="features[]" value="{{ $feature }}"
+                    class="w-full border px-3 py-2 rounded mt-2">
+            @endforeach
         </div>
 
         <button type="button" onclick="addFeature()"

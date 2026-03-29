@@ -1,11 +1,11 @@
-@extends('admin.layout')
+@extends('layouts.admin')
 
 @section('content')
 <div class="p-6">
 
     <div class="flex justify-between mb-6">
         <h2 class="text-2xl font-bold">Testimonials</h2>
-        <a href="{{ route('testimonials.create') }}"
+        <a href="{{ route('admin.testimonials.create') }}"
            class="bg-blue-600 text-white px-4 py-2 rounded-lg">
            + Add Testimonial
         </a>
@@ -38,12 +38,12 @@
             </p>
 
             <div class="flex gap-2 mt-4">
-                <a href="{{ route('testimonials.edit', $t->id) }}"
+                <a href="{{ route('admin.testimonials.edit', $t->id) }}"
                    class="bg-yellow-400 text-white px-3 py-1 rounded">
                    Edit
                 </a>
 
-                <form action="{{ route('testimonials.destroy', $t->id) }}" method="POST">
+                <form action="{{ route('admin.testimonials.destroy', $t->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button class="bg-red-500 text-white px-3 py-1 rounded">

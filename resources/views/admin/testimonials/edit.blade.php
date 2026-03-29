@@ -1,11 +1,11 @@
-@extends('admin.layout')
+@extends('layouts.admin')
 
 @section('content')
 <div class="p-6 max-w-xl mx-auto">
 
     <h2 class="text-2xl font-bold mb-6">Edit Testimonial</h2>
 
-    <form action="{{ route('testimonials.update', $testimonial->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+    <form action="{{ route('admin.testimonials.update', $testimonial->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
         @method('PUT')
 

@@ -1,11 +1,11 @@
-@extends('admin.layout')
+@extends('layouts.admin')
 
 @section('content')
 <div class="p-6 max-w-xl mx-auto">
 
     <h2 class="text-2xl font-bold mb-6">Add Brand</h2>
 
-    <form action="{{ route('brands.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+    <form action="{{ route('admin.brands.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
         @csrf
 
         <div>

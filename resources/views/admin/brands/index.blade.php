@@ -1,11 +1,11 @@
-@extends('admin.layout')
+@extends('layouts.admin')
 
 @section('content')
 <div class="p-6">
 
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold">Brands</h2>
-        <a href="{{ route('brands.create') }}" 
+        <a href="{{ route('admin.brands.create') }}" 
            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
             + Add Brand
         </a>
@@ -39,12 +39,12 @@
                     <td class="p-3">{{ $brand->name }}</td>
 
                     <td class="p-3 flex gap-2">
-                        <a href="{{ route('brands.edit', $brand->id) }}" 
+                        <a href="{{ route('admin.brands.edit', $brand->id) }}" 
                            class="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500">
                             Edit
                         </a>
 
-                        <form action="{{ route('brands.destroy', $brand->id) }}" method="POST">
+                        <form action="{{ route('admin.brands.destroy', $brand->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">

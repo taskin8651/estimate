@@ -43,7 +43,7 @@ class HeroController extends Controller
             'image' => $imagePath,
         ]);
 
-        return redirect()->route('hero.index')->with('success', 'Hero created successfully');
+        return redirect()->route('admin.hero.index')->with('success', 'Hero created successfully');
     }
 
     public function edit($id)
@@ -76,7 +76,7 @@ class HeroController extends Controller
             'button_link' => $request->button_link,
         ]);
 
-        return redirect()->route('hero.index')->with('success', 'Hero updated');
+        return redirect()->route('admin.hero.index')->with('success', 'Hero updated');
     }
 
     public function destroy($id)

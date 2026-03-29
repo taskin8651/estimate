@@ -1,11 +1,11 @@
-@extends('admin.layout')
+@extends('layouts.admin')
 
 @section('content')
 <div class="p-6 max-w-xl mx-auto">
 
     <h2 class="text-2xl font-bold mb-6">Add Pricing Plan</h2>
 
-    <form action="{{ route('pricing.store') }}" method="POST" class="space-y-4">
+    <form action="{{ route('admin.pricing.store') }}" method="POST" class="space-y-4">
         @csrf
 
         <input type="text" name="name" placeholder="Plan Name"
@@ -14,9 +14,22 @@
         <input type="number" name="price" placeholder="Price"
             class="w-full border px-3 py-2 rounded">
 
-        <input type="text" name="duration" placeholder="Monthly / Yearly"
+        <input type="text" name="duration" placeholder="Duration"
             class="w-full border px-3 py-2 rounded">
 
+        <!-- TYPE -->
+        <select name="type" class="w-full border px-3 py-2 rounded">
+            <option value="">Select Type</option>
+            <option value="intro">Intro</option>
+            <option value="popular">Popular</option>
+            <option value="pro">Pro</option>
+        </select>
+
+        <!-- ORDER -->
+        <input type="number" name="order" placeholder="Order (1,2,3)"
+            class="w-full border px-3 py-2 rounded">
+
+        <!-- FEATURES -->
         <div id="features-wrapper">
             <label class="font-medium">Features</label>
             <input type="text" name="features[]" class="w-full border px-3 py-2 rounded mt-2">

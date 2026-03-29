@@ -44,7 +44,7 @@ class ServiceController extends Controller
             'status' => 1,
         ]);
 
-        return redirect()->route('services.index')->with('success', 'Service created');
+        return redirect()->route('admin.services.index')->with('success', 'Service created');
     }
 
     public function edit($id)
@@ -76,7 +76,7 @@ class ServiceController extends Controller
             'base_price' => $request->base_price,
         ]);
 
-        return redirect()->route('services.index')->with('success', 'Service updated');
+        return redirect()->route('admin.services.index')->with('success', 'Service updated');
     }
 
     public function destroy($id)

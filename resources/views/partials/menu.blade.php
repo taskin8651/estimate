@@ -166,6 +166,8 @@
 @endcanany
 
 
+
+
 {{-- ================= SETTINGS ================= --}}
 @can('setting_access')
 <a href="{{ route('admin.settings.index') }}"
@@ -177,6 +179,93 @@
     Settings
 </a>
 @endcan
+
+
+{{-- ================= CMS MENU ================= --}}
+@canany(['hero_access','service_access','pricing_access','testimonial_access','brand_access'])
+<div x-data="{ 
+        open: {{ request()->is('admin/hero*') || request()->is('admin/services*') || request()->is('admin/pricing*') || request()->is('admin/testimonials*') || request()->is('admin/brands*') ? 'true' : 'false' }} 
+    }">
+
+    <button @click="open = !open"
+            class="group w-full flex items-center justify-between px-3 py-2 rounded transition
+                   hover:bg-slate-800
+                   {{ request()->is('admin/hero*') || request()->is('admin/services*') || request()->is('admin/pricing*') || request()->is('admin/testimonials*') || request()->is('admin/brands*')
+                        ? 'bg-slate-800 text-white'
+                        : '' }}">
+
+        <span class="flex items-center gap-3">
+            <i class="fas fa-layer-group text-slate-400 group-hover:text-white transition"></i>
+            CMS
+        </span>
+
+        <i class="fas fa-chevron-down text-xs transition-transform duration-300"
+           :class="open ? 'rotate-180' : ''"></i>
+    </button>
+
+    {{-- Dropdown --}}
+    <div x-show="open"
+         x-transition
+         class="ml-6 mt-1 space-y-1">
+
+        {{-- Hero --}}
+        @can('hero_access')
+            <a href="{{ route('admin.hero.index') }}"
+               class="block px-3 py-2 rounded transition
+               {{ request()->is('admin/hero*')
+                    ? 'bg-slate-800 text-white'
+                    : 'hover:bg-slate-800 hover:pl-4' }}">
+                Hero Section
+            </a>
+        @endcan
+
+        {{-- Services --}}
+        @can('service_access')
+            <a href="{{ route('admin.services.index') }}"
+               class="block px-3 py-2 rounded transition
+               {{ request()->is('admin/services*')
+                    ? 'bg-slate-800 text-white'
+                    : 'hover:bg-slate-800 hover:pl-4' }}">
+                Services
+            </a>
+        @endcan
+
+        {{-- Pricing --}}
+        @can('pricing_access')
+            <a href="{{ route('admin.pricing.index') }}"
+               class="block px-3 py-2 rounded transition
+               {{ request()->is('admin/pricing*')
+                    ? 'bg-slate-800 text-white'
+                    : 'hover:bg-slate-800 hover:pl-4' }}">
+                Pricing
+            </a>
+        @endcan
+
+        {{-- Testimonials --}}
+        @can('testimonial_access')
+            <a href="{{ route('admin.testimonials.index') }}"
+               class="block px-3 py-2 rounded transition
+               {{ request()->is('admin/testimonials*')
+                    ? 'bg-slate-800 text-white'
+                    : 'hover:bg-slate-800 hover:pl-4' }}">
+                Testimonials
+            </a>
+        @endcan
+
+        {{-- Brands --}}
+        @can('brand_access')
+            <a href="{{ route('admin.brands.index') }}"
+               class="block px-3 py-2 rounded transition
+               {{ request()->is('admin/brands*')
+                    ? 'bg-slate-800 text-white'
+                    : 'hover:bg-slate-800 hover:pl-4' }}">
+                Brands
+            </a>
+        @endcan
+
+    </div>
+</div>
+@endcanany
 
 
 

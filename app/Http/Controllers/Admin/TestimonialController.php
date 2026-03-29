@@ -41,7 +41,7 @@ class TestimonialController extends Controller
             'image' => $imagePath,
         ]);
 
-        return redirect()->route('testimonials.index')->with('success', 'Testimonial added');
+        return redirect()->route('admin.testimonials.index')->with('success', 'Testimonial added');
     }
 
     public function edit($id)
@@ -72,7 +72,7 @@ class TestimonialController extends Controller
             'rating' => $request->rating,
         ]);
 
-        return redirect()->route('testimonials.index')->with('success', 'Updated successfully');
+        return redirect()->route('admin.testimonials.index')->with('success', 'Updated successfully');
     }
 
     public function destroy($id)

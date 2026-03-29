@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Custom\IndexController;
+
+
 Route::redirect('/', '/login');
 Route::get('/home', function () {
     if (session('status')) {
@@ -87,4 +90,9 @@ Route::middleware(['auth', 'subscription'])
     Route::get('/billing', function () {
     return view('billing.index');
 })->name('billing.index');
+
+
+// custom Route
+
+Route::get('/', [IndexController::class, 'index'])->name('home');
 

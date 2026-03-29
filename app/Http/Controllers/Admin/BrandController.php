@@ -37,7 +37,7 @@ class BrandController extends Controller
             'logo' => $logoPath,
         ]);
 
-        return redirect()->route('brands.index')->with('success', 'Brand created successfully');
+        return redirect()->route('admin.brands.index')->with('success', 'Brand created successfully');
     }
 
     public function edit($id)
@@ -63,7 +63,7 @@ class BrandController extends Controller
         $brand->name = $request->name;
         $brand->save();
 
-        return redirect()->route('brands.index')->with('success', 'Brand updated');
+        return redirect()->route('admin.brands.index')->with('success', 'Brand updated');
     }
 
     public function destroy($id)
