@@ -1,113 +1,127 @@
-@extends('layouts.app')
+@extends('custom.master')
 @section('content')
 
-<div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+<!-- Register Wrapper Area -->
+<div class="login-wrapper d-flex align-items-center justify-content-center">
+    <div class="custom-container">
 
-    <div class="w-full max-w-md bg-white border border-gray-200 rounded-lg shadow-sm">
+        <!-- Image -->
+        <div class="text-center px-4">
+            <img class="login-intro-img" src="{{ asset('assets/img/bg-img/36.png') }}" alt="">
+        </div>
 
-        {{-- HEADER --}}
-        <div class="px-8 pt-8 pb-4 text-center">
-            <h1 class="text-2xl font-semibold text-gray-900">
-                {{ trans('panel.site_title') }}
-            </h1>
-            <p class="text-sm text-gray-500 mt-1">
-                {{ trans('global.register') }}
+        <!-- Register Form -->
+        <div class="register-form mt-4">
+            <h2 class="mb-3 text-center">{{ trans('global.register') }}</h2>
+
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
+
+                <!-- Name -->
+                <div class="form-group mb-3">
+                    <input class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}"
+                           type="text"
+                           name="name"
+                           value="{{ old('name') }}"
+                           placeholder="{{ trans('global.user_name') }}"
+                           required autofocus>
+
+                    @if($errors->has('name'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('name') }}
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Email -->
+                <div class="form-group mb-3">
+                    <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
+                           type="email"
+                           name="email"
+                           value="{{ old('email') }}"
+                           placeholder="{{ trans('global.login_email') }}"
+                           required>
+
+                    @if($errors->has('email'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('email') }}
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Password -->
+                <div class="form-group mb-3 position-relative">
+                    <input class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
+                           id="password"
+                           type="password"
+                           name="password"
+                           placeholder="{{ trans('global.login_password') }}"
+                           required>
+
+                    <!-- Toggle -->
+                    <div class="position-absolute" id="password-visibility" style="right:10px; top:50%; transform:translateY(-50%); cursor:pointer;">
+                        <i class="ti ti-eye"></i>
+                    </div>
+
+                    @if($errors->has('password'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('password') }}
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group mb-3">
+                    <input class="form-control"
+                           type="password"
+                           name="password_confirmation"
+                           placeholder="{{ trans('global.login_password_confirmation') }}"
+                           required>
+                </div>
+
+                <!-- Terms -->
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" required>
+                    <label class="form-check-label text-muted">
+                        I agree with the terms & policy
+                    </label>
+                </div>
+
+                <!-- Button -->
+                <button class="btn btn-primary w-100" type="submit">
+                    {{ trans('global.register') }} <i class="ti ti-arrow-right"></i>
+                </button>
+
+            </form>
+        </div>
+
+        <!-- Bottom -->
+        <div class="login-meta-data text-center">
+            <p class="mt-3 mb-0">
+                Already have an account?
+                <a href="{{ route('login') }}">Login</a>
             </p>
         </div>
 
-        {{-- FORM --}}
-        <form method="POST" action="{{ route('register') }}" class="px-8 pb-8 space-y-5">
-            @csrf
-
-            {{-- NAME --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    {{ trans('global.user_name') }}
-                </label>
-                <input type="text"
-                       name="name"
-                       value="{{ old('name') }}"
-                       required
-                       autofocus
-                       class="w-full px-3 py-2 border rounded-md text-sm
-                              focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                              {{ $errors->has('name') ? 'border-red-500' : 'border-gray-300' }}">
-                @if($errors->has('name'))
-                    <p class="mt-1 text-xs text-red-600">
-                        {{ $errors->first('name') }}
-                    </p>
-                @endif
-            </div>
-
-            {{-- EMAIL --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    {{ trans('global.login_email') }}
-                </label>
-                <input type="email"
-                       name="email"
-                       value="{{ old('email') }}"
-                       required
-                       class="w-full px-3 py-2 border rounded-md text-sm
-                              focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                              {{ $errors->has('email') ? 'border-red-500' : 'border-gray-300' }}">
-                @if($errors->has('email'))
-                    <p class="mt-1 text-xs text-red-600">
-                        {{ $errors->first('email') }}
-                    </p>
-                @endif
-            </div>
-
-            {{-- PASSWORD --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    {{ trans('global.login_password') }}
-                </label>
-                <input type="password"
-                       name="password"
-                       required
-                       class="w-full px-3 py-2 border rounded-md text-sm
-                              focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                              {{ $errors->has('password') ? 'border-red-500' : 'border-gray-300' }}">
-                @if($errors->has('password'))
-                    <p class="mt-1 text-xs text-red-600">
-                        {{ $errors->first('password') }}
-                    </p>
-                @endif
-            </div>
-
-            {{-- CONFIRM PASSWORD --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    {{ trans('global.login_password_confirmation') }}
-                </label>
-                <input type="password"
-                       name="password_confirmation"
-                       required
-                       class="w-full px-3 py-2 border rounded-md text-sm
-                              focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                              border-gray-300">
-            </div>
-
-            {{-- ACTION --}}
-            <div class="pt-2">
-                <button type="submit"
-                        class="w-full py-2.5 bg-blue-600 text-white text-sm font-medium
-                               rounded-md hover:bg-blue-700 transition">
-                    {{ trans('global.register') }}
-                </button>
-            </div>
-
-            {{-- LOGIN LINK --}}
-            <div class="text-center pt-2">
-                <a href="{{ route('login') }}"
-                   class="text-sm text-blue-600 hover:underline">
-                    Already have an account? Login
-                </a>
-            </div>
-
-        </form>
     </div>
 </div>
+
+<!-- 🔥 Password Toggle Script -->
+<script>
+    document.getElementById('password-visibility').addEventListener('click', function () {
+        let input = document.getElementById('password');
+        let icon = this.querySelector('i');
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('ti-eye');
+            icon.classList.add('ti-eye-off');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('ti-eye-off');
+            icon.classList.add('ti-eye');
+        }
+    });
+</script>
 
 @endsection

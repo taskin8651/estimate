@@ -182,9 +182,9 @@
 
 
 {{-- ================= CMS MENU ================= --}}
-@canany(['hero_access','service_access','pricing_access','testimonial_access','brand_access'])
+@canany(['hero_access','service_access','pricing_access','testimonial_access','brand_access','gallery_access'])
 <div x-data="{ 
-        open: {{ request()->is('admin/hero*') || request()->is('admin/services*') || request()->is('admin/pricing*') || request()->is('admin/testimonials*') || request()->is('admin/brands*') ? 'true' : 'false' }} 
+        open: {{ request()->is('admin/hero*') || request()->is('admin/services*') || request()->is('admin/pricing*') || request()->is('admin/testimonials*') || request()->is('admin/brands*') || request()->is('admin/gallery*') ? 'true' : 'false' }} 
     }">
 
     <button @click="open = !open"
@@ -260,6 +260,17 @@
                     ? 'bg-slate-800 text-white'
                     : 'hover:bg-slate-800 hover:pl-4' }}">
                 Brands
+            </a>
+        @endcan
+
+        {{-- Gallery --}}
+        @can('gallery_access')
+            <a href="{{ route('admin.gallery.index') }}"
+               class="block px-3 py-2 rounded transition
+               {{ request()->is('admin/gallery*')
+                    ? 'bg-slate-800 text-white'
+                    : 'hover:bg-slate-800 hover:pl-4' }}">
+                Gallery
             </a>
         @endcan
 

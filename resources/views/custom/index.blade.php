@@ -228,7 +228,52 @@
 
 </div>
 
- <div class="container">
+ 
+
+ <div class="container mt-3">
+  <div class="card">
+    <div class="card-body">
+
+      <div class="d-flex align-items-end justify-content-between gap-3 mb-3">
+        <div class="image-gallery-text">
+          <h3 class="mb-0">Recent works</h3>
+          <p class="mb-0">Latest awesome portfolio.</p>
+        </div>
+
+        <div>
+          <a class="btn btn-primary btn-sm" href="#">View More</a>
+        </div>
+      </div>
+
+      <!-- Gallery Slider -->
+      <div class="image-gallery-slides-wrapper" dir="ltr">
+        <div class="image-gallery-carousel">
+
+          @foreach($galleries as $item)
+          <div>
+            <div class="single-gallery-item">
+
+              <!-- Image -->
+              <img src="{{ $item->getFirstMediaUrl('gallery') }}" alt="{{ $item->title }}">
+
+              <!-- Fav Icon -->
+              <a class="fav-icon shadow" href="#">
+                <i class="ti ti-heart"></i>
+              </a>
+
+            </div>
+          </div>
+          @endforeach
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<div class="container">
   <div class="card">
     <div class="card-body p-0">
 
@@ -273,6 +318,7 @@
     </div>
   </div>
 </div>
+
 
 
        <div class="container">

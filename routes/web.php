@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Custom\IndexController;
+use App\Http\Controllers\Custom\GalleryController;
+use App\Http\Controllers\Custom\ServiceController;
 
 
 Route::redirect('/', '/login');
@@ -67,6 +69,7 @@ Route::post('estimates/{estimate}/template',
     Route::resource('pricing', PricingController::class);
     Route::resource('testimonials', TestimonialController::class);
     Route::resource('brands', BrandController::class);
+     Route::resource('gallery', GalleryController::class);
 
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
@@ -95,4 +98,16 @@ Route::middleware(['auth', 'subscription'])
 // custom Route
 
 Route::get('/', [IndexController::class, 'index'])->name('home');
+Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.page');
 
+// List page
+Route::get('/services', [ServiceController::class, 'index'])
+    ->name('services.page');
+
+// Detail page (optional)
+Route::get('/services/{slug}', [ServiceController::class, 'show'])
+    ->name('services.show');
+
+    Route::get('/settings', function () {
+    return view('custom.settings');
+})->name('custom.settings');
