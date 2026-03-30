@@ -138,7 +138,7 @@ Bill To
 <div class="border-t mt-3 pt-2 text-right">
 <p>Grand Total</p>
 <p class="text-lg font-semibold">
-{{ $setting->currency }} {{ number_format($estimate->total,2) }}
+{{ $setting->currency_symbol }} {{ number_format($estimate->total,2) }}
 </p>
 </div>
 
@@ -181,11 +181,11 @@ Bill To
 </td>
 
 <td class="p-3 text-right">
-{{ $setting->currency }} {{ number_format($item->rate,2) }}
+{{ $setting->currency_symbol }} {{ number_format($item->rate,2) }}
 </td>
 
 <td class="p-3 text-right font-semibold {{ $theme['amount'] }}">
-{{ $setting->currency }} {{ number_format($item->amount,2) }}
+{{ $setting->currency_symbol }} {{ number_format($item->amount,2) }}
 </td>
 
 </tr>
@@ -217,16 +217,45 @@ Bill To
                         </p>
                     @endif
 
-                    @if($setting->bank_name)
-                        <div class="mt-3">
-                            <p class="font-medium mb-1">Bank Details:</p>
-                            <p>{{ $setting->bank_beneficiary_name }}</p>
-                            <p>{{ $setting->bank_name }}</p>
-                            <p>A/C: {{ $setting->bank_account_number }}</p>
-                            <p>IBAN: {{ $setting->iban_number }}</p>
-                            <p>SWIFT: {{ $setting->swift_code }}</p>
-                        </div>
-                    @endif
+                   @if(
+    $setting->bank_name ||
+    $setting->bank_account_number ||
+    $setting->iban_number ||
+    $setting->ifsc_code
+)
+
+<div class="mt-4">
+    <p class="font-semibold mb-2">Bank Details</p>
+
+    @if($setting->bank_beneficiary_name)
+        <p>{{ $setting->bank_beneficiary_name }}</p>
+    @endif
+
+    @if($setting->bank_name)
+        <p>{{ $setting->bank_name }}</p>
+    @endif
+
+    @if($setting->bank_account_number)
+        <p>A/C: {{ $setting->bank_account_number }}</p>
+    @endif
+
+    {{-- 🇮🇳 India --}}
+    @if($setting->ifsc_code)
+        <p>IFSC: {{ $setting->ifsc_code }}</p>
+    @endif
+
+    {{-- 🌍 UAE / International --}}
+    @if($setting->iban_number)
+        <p>IBAN: {{ $setting->iban_number }}</p>
+    @endif
+
+    @if($setting->swift_code)
+        <p>SWIFT: {{ $setting->swift_code }}</p>
+    @endif
+
+</div>
+
+@endif
 
 </div>
 
@@ -236,17 +265,19 @@ Bill To
 
 <div class="flex justify-between py-1">
 <span>Subtotal</span>
-<span>{{ $setting->currency }} {{ number_format($estimate->subtotal,2) }}</span>
+<span>{{ $setting->currency_symbol }} {{ number_format($estimate->subtotal,2) }}</span>
 </div>
 @foreach($estimate->taxes as $tax)
 <div class="flex justify-between py-1">
-<span>
-{{ $tax->name }} ({{ $tax->rate }}%)
-</span>
 
-<span>
-{{ $setting->currency }} {{ number_format($tax->pivot->amount,2) }}
-</span>
+    <span>
+        {{ $tax->pivot->tax_name ?? $tax->name }} 
+        ({{ $tax->pivot->tax_rate ?? $tax->rate }}%)
+    </span>
+
+    <span>
+        {{ $setting->currency_symbol }} {{ number_format($tax->pivot->amount, 2) }}
+    </span>
 
 </div>
 @endforeach
@@ -254,7 +285,7 @@ Bill To
 
 <div class="flex justify-between py-2 border-t font-semibold mt-2 {{ $theme['accent'] }}">
 <span>Total</span>
-<span>{{ $setting->currency }} {{ number_format($estimate->total,2) }}</span>
+<span>{{ $setting->currency_symbol }} {{ number_format($estimate->total,2) }}</span>
 </div>
 
 </div>

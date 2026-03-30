@@ -47,38 +47,34 @@ class EstimateController extends Controller
 
 
     // 📌 Store Estimate
-   public function store(Request $request)
+  public function store(Request $request)
 {
-    // dd($request->all());
     $request->validate([
         'client_id' => 'required',
         'issue_date' => 'required|date',
         'items' => 'required|array'
     ]);
 
-
-    // 🔹 Auto Estimate Number
+    // 🔹 Estimate Number
     $last = Estimate::latest()->first();
     $number = $last ? $last->id + 1 : 1;
     $estimateNumber = 'EST-' . str_pad($number, 4, '0', STR_PAD_LEFT);
 
-
-    // 🔹 Calculate Subtotal
+    // 🔹 Subtotal
     $subtotal = 0;
 
     foreach ($request->items as $item) {
-
         $qty = $item['quantity'] ?? 0;
         $rate = $item['rate'] ?? 0;
 
         $subtotal += ($qty * $rate);
     }
 
-
-    // 🔹 Calculate Taxes
+    // 🔹 Taxes
     $taxAmount = 0;
+    $taxData = [];
 
-    if ($request->taxes) {
+    if (!empty($request->taxes)) {
 
         foreach ($request->taxes as $taxId) {
 
@@ -90,18 +86,19 @@ class EstimateController extends Controller
 
                 $taxAmount += $amount;
 
+                // ✅ SNAPSHOT SAVE
                 $taxData[] = [
                     'tax_id' => $tax->id,
+                    'tax_name' => $tax->name,
+                    'tax_rate' => $tax->rate,
                     'amount' => $amount
                 ];
             }
         }
     }
 
-
-    // 🔹 Grand Total
+    // 🔹 Total
     $total = $subtotal + $taxAmount;
-
 
     // 🔹 Create Estimate
     $estimate = Estimate::create([
@@ -114,11 +111,10 @@ class EstimateController extends Controller
         'total' => $total,
         'status' => 'draft',
         'notes' => $request->notes,
-        'created_by' => Auth::id(),
+        'created_by' => auth()->id(),
     ]);
 
-
-    // 🔹 Save Items
+    // 🔹 Items
     foreach ($request->items as $item) {
 
         $qty = $item['quantity'] ?? 0;
@@ -134,25 +130,25 @@ class EstimateController extends Controller
         ]);
     }
 
-
-    // 🔹 Save Taxes (pivot table)
+    // 🔹 Taxes Save (with snapshot)
     if (!empty($taxData)) {
 
         foreach ($taxData as $tax) {
 
             $estimate->taxes()->attach($tax['tax_id'], [
+                'tax_name' => $tax['tax_name'],
+                'tax_rate' => $tax['tax_rate'],
                 'amount' => $tax['amount']
             ]);
 
         }
-
     }
-
 
     return redirect()
         ->route('admin.estimates.index')
         ->with('success', 'Estimate Created Successfully');
 }
+
 
     // 📌 Show
 public function show(Estimate $estimate)

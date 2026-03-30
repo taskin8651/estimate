@@ -62,7 +62,7 @@ class Estimate extends Model
         return $this->belongsToMany(
             Tax::class,
             'estimate_taxes'
-        )->withPivot('amount')->withTimestamps();
+        )->withPivot('tax_name', 'tax_rate', 'amount')->withTimestamps();
     }
 
 

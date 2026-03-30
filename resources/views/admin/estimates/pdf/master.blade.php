@@ -229,7 +229,7 @@ TRN: {{ $setting->trn_number }}
 
 <strong style="font-size:14px;color: {{ $theme['amount'] }}">
 
-{{ $setting->currency }} {{ number_format($estimate->total,2) }}
+{{ $setting->currency_symbol }} {{ number_format($estimate->total,2) }}
 
 </strong>
 
@@ -272,13 +272,13 @@ TRN: {{ $setting->trn_number }}
 
 <td class="text-right">
 
-{{ $setting->currency }} {{ number_format($item->rate,2) }}
+{{ $setting->currency_symbol }} {{ number_format($item->rate,2) }}
 
 </td>
 
 <td class="text-right">
 
-{{ $setting->currency }} {{ number_format($item->amount,2) }}
+{{ $setting->currency_symbol }} {{ number_format($item->amount,2) }}
 
 </td>
 
@@ -311,17 +311,42 @@ TRN: {{ $setting->trn_number }}
 
 @endif
 
-@if($setting->bank_name)
+@if(
+    $setting->bank_name ||
+    $setting->bank_account_number ||
+    $setting->iban_number ||
+    $setting->ifsc_code
+)
 
 <br><br>
 
 <strong>Bank Details:</strong><br>
 
+@if($setting->bank_beneficiary_name)
 Beneficiary: {{ $setting->bank_beneficiary_name }}<br>
+@endif
+
+@if($setting->bank_account_number)
 Account No: {{ $setting->bank_account_number }}<br>
+@endif
+
+@if($setting->bank_name)
 Bank Name: {{ $setting->bank_name }}<br>
+@endif
+
+{{-- 🇮🇳 India --}}
+@if($setting->ifsc_code)
+IFSC: {{ $setting->ifsc_code }}<br>
+@endif
+
+{{-- 🌍 UAE / International --}}
+@if($setting->iban_number)
 IBAN: {{ $setting->iban_number }}<br>
-SWIFT: {{ $setting->swift_code }}
+@endif
+
+@if($setting->swift_code)
+SWIFT: {{ $setting->swift_code }}<br>
+@endif
 
 @endif
 
@@ -335,17 +360,18 @@ SWIFT: {{ $setting->swift_code }}
 <td>Subtotal</td>
 <td class="text-right">
 
-{{ $setting->currency }} {{ number_format($estimate->subtotal,2) }}
+{{ $setting->currency_symbol }} {{ number_format($estimate->subtotal,2) }}
 
 </td>
 </tr>
 @foreach($estimate->taxes as $tax)
 
 <tr>
-<td>{{ $tax->name }} ({{ $tax->rate }}%)</td>
+<td>{{ $tax->pivot->tax_name ?? $tax->name }} ({{ $tax->pivot->tax_rate ?? $tax->rate }}%)</td>
+
 
 <td class="text-right">
-{{ $setting->currency }} {{ number_format($tax->pivot->amount,2) }}
+{{ $setting->currency_symbol }} {{ number_format($tax->pivot->amount,2) }}
 </td>
 
 </tr>
@@ -356,7 +382,7 @@ SWIFT: {{ $setting->swift_code }}
 <td>Total</td>
 <td class="text-right">
 
-{{ $setting->currency }} {{ number_format($estimate->total,2) }}
+{{ $setting->currency_symbol }} {{ number_format($estimate->total,2) }}
 
 </td>
 </tr>
