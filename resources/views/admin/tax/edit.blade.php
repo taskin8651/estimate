@@ -21,14 +21,19 @@
             <input
                 type="text"
                 name="name"
-                value="{{ $tax->name }}"
-                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                value="{{ old('name', $tax->name) }}"
+                oninput="this.value = this.value.toUpperCase()"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
             >
+
+            @error('name')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
 
-        {{-- Tax Rate --}}
-        <div class="mb-6">
+        {{-- Rate --}}
+        <div class="mb-5">
             <label class="block text-sm font-medium text-gray-700 mb-2">
                 Rate (%)
             </label>
@@ -37,9 +42,60 @@
                 type="number"
                 step="0.01"
                 name="rate"
-                value="{{ $tax->rate }}"
-                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                value="{{ old('rate', $tax->rate) }}"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
             >
+
+            @error('rate')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+
+        {{-- Type --}}
+        <div class="mb-5">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+                Tax Type
+            </label>
+
+            <select name="type"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500">
+
+                <option value="">Select Type</option>
+                <option value="GST" {{ $tax->type == 'GST' ? 'selected' : '' }}>GST (India)</option>
+                <option value="VAT" {{ $tax->type == 'VAT' ? 'selected' : '' }}>VAT (UAE)</option>
+
+            </select>
+        </div>
+
+
+        {{-- Country --}}
+        <div class="mb-5">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+                Country
+            </label>
+
+            <select name="country"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500">
+
+                <option value="">Select Country</option>
+                <option value="India" {{ $tax->country == 'India' ? 'selected' : '' }}>India</option>
+                <option value="UAE" {{ $tax->country == 'UAE' ? 'selected' : '' }}>UAE</option>
+
+            </select>
+        </div>
+
+
+        {{-- Default Tax --}}
+        <div class="mb-6 flex items-center gap-2">
+            <input type="checkbox"
+                   name="is_default"
+                   {{ $tax->is_default ? 'checked' : '' }}
+                   class="rounded border-gray-300">
+
+            <label class="text-sm text-gray-700">
+                Set as Default Tax
+            </label>
         </div>
 
 

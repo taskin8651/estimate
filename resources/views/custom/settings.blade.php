@@ -94,23 +94,39 @@
       </a>
     </div>
 
-    <!-- 🔹 Logout -->
+    <!-- 🔹 Auth Based Button -->
+@auth
+    <!-- Logout -->
     <div class="single-setting-panel">
-      <a href="{{ route('logout') }}"
-         class="d-flex align-items-center gap-2"
-         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+        <a href="{{ route('logout') }}"
+           class="d-flex align-items-center gap-2"
+           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
 
-        <div class="icon-wrapper bg-danger">
-          <i class="ti ti-logout"></i>
-        </div>
-        <span>Logout</span>
-      </a>
+            <div class="icon-wrapper bg-danger">
+                <i class="ti ti-logout"></i>
+            </div>
+            <span>Logout</span>
+        </a>
 
-      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-      </form>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
     </div>
+@endauth
 
+
+@guest
+    <!-- Login -->
+    <div class="single-setting-panel">
+        <a href="{{ route('login') }}" class="d-flex align-items-center gap-2">
+
+            <div class="icon-wrapper bg-success">
+                <i class="ti ti-login"></i>
+            </div>
+            <span>Login</span>
+        </a>
+    </div>
+@endguest
     <!-- 🔥 Divider -->
     <hr class="my-3">
 

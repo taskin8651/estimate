@@ -22,33 +22,53 @@ class SettingController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            // Basic Info
+
+            // 🌍 Company Info
             'company_name' => 'required|string|max:255',
             'company_email' => 'nullable|email|max:255',
             'company_phone' => 'nullable|string|max:50',
             'company_address' => 'nullable|string',
+            'company_website' => 'nullable|max:255',
 
-            // UAE Tax
-            'trn_number' => 'nullable|string|max:100',
-            'vat_percentage' => 'nullable|numeric|min:0|max:100',
+            // 🌍 Location
+            'company_city' => 'nullable|string|max:100',
+            'company_state' => 'nullable|string|max:100',
+            'company_country' => 'nullable|string|max:100',
+            'company_zip' => 'nullable|string|max:20',
 
-            // Bank Details
+            // 🇮🇳 India
+            'gst_number' => 'nullable|string|max:100',
+            'pan_number' => 'nullable|string|max:50',
+            'cin_number' => 'nullable|string|max:50',
+
+            // 🇦🇪 UAE
+            'trade_license_number' => 'nullable|string|max:100',
+
+            // 🏦 Bank
             'bank_beneficiary_name' => 'nullable|string|max:255',
             'bank_name' => 'nullable|string|max:255',
             'bank_account_number' => 'nullable|string|max:100',
             'iban_number' => 'nullable|string|max:100',
             'swift_code' => 'nullable|string|max:50',
+            'ifsc_code' => 'nullable|string|max:50',
 
-            // Invoice Settings
+            // 💰 Invoice
             'currency' => 'nullable|string|max:10',
+            'currency_symbol' => 'nullable|string|max:10',
             'invoice_prefix' => 'nullable|string|max:20',
             'estimate_prefix' => 'nullable|string|max:20',
-            'payment_terms' => 'nullable|string|max:255',
+            'invoice_start_number' => 'nullable|integer|min:1',
+            'payment_terms' => 'nullable|string',
+            'payment_due_days' => 'nullable|integer|min:0',
 
-            // Logo
+            // 📄 Extra
+            'terms_conditions' => 'nullable|string',
+            'notes' => 'nullable|string',
+
+            // 🖼️ Files
             'company_logo' => 'nullable|image|max:2048',
             'authorized_signature' => 'nullable|image|max:2048',
-            'company_website' => 'nullable|max:255',
+            'company_stamp' => 'nullable|image|max:2048',
         ]);
 
         $setting = Setting::firstOrCreate(
@@ -56,53 +76,81 @@ class SettingController extends Controller
             ['created_by' => auth()->id()]
         );
 
+        // ✅ Clean Data (NO TAX FIELDS)
         $data = $request->only([
             'company_name',
             'company_email',
             'company_phone',
             'company_address',
-            'trn_number',
-            'vat_percentage',
+            'company_website',
+            'company_city',
+            'company_state',
+            'company_country',
+            'company_zip',
+
+            'gst_number',
+            'pan_number',
+            'cin_number',
+            'trade_license_number',
+
             'bank_beneficiary_name',
             'bank_name',
             'bank_account_number',
             'iban_number',
             'swift_code',
+            'ifsc_code',
+
             'currency',
+            'currency_symbol',
             'invoice_prefix',
             'estimate_prefix',
+            'invoice_start_number',
             'payment_terms',
-            'authorized_signature',
-            'company_website',
+            'payment_due_days',
+
+            'terms_conditions',
+            'notes',
         ]);
 
-        // Default UAE settings
-        $data['currency'] = $data['currency'] ?? 'AED';
-        $data['vat_percentage'] = $data['vat_percentage'] ?? 5.00;
+        // 🔥 Default Values (smart)
+        $data['currency'] = $data['currency'] ?? 'INR';
+        $data['currency_symbol'] = $data['currency_symbol'] ?? '₹';
+        $data['invoice_start_number'] = $data['invoice_start_number'] ?? 1;
 
-        // Logo Upload
+        // 🖼️ Logo Upload
         if ($request->hasFile('company_logo')) {
 
-            // Delete old logo
             if ($setting->company_logo && Storage::disk('public')->exists($setting->company_logo)) {
                 Storage::disk('public')->delete($setting->company_logo);
             }
 
             $data['company_logo'] = $request->file('company_logo')
-                                            ->store('company', 'public');
+                                           ->store('company', 'public');
         }
 
-        // Authorized Signature Upload
-if ($request->hasFile('authorized_signature')) {
+        // ✍️ Signature Upload
+        if ($request->hasFile('authorized_signature')) {
 
-    if ($setting->authorized_signature &&
-        Storage::disk('public')->exists($setting->authorized_signature)) {
-        Storage::disk('public')->delete($setting->authorized_signature);
-    }
+            if ($setting->authorized_signature &&
+                Storage::disk('public')->exists($setting->authorized_signature)) {
+                Storage::disk('public')->delete($setting->authorized_signature);
+            }
 
-    $data['authorized_signature'] = $request->file('authorized_signature')
-                                           ->store('signature', 'public');
-}
+            $data['authorized_signature'] = $request->file('authorized_signature')
+                                                   ->store('signature', 'public');
+        }
+
+        // 🏢 Stamp Upload
+        if ($request->hasFile('company_stamp')) {
+
+            if ($setting->company_stamp &&
+                Storage::disk('public')->exists($setting->company_stamp)) {
+                Storage::disk('public')->delete($setting->company_stamp);
+            }
+
+            $data['company_stamp'] = $request->file('company_stamp')
+                                            ->store('stamp', 'public');
+        }
 
         $setting->update($data);
 
