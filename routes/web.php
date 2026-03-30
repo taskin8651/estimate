@@ -3,6 +3,7 @@
 use App\Http\Controllers\Custom\IndexController;
 use App\Http\Controllers\Custom\GalleryController;
 use App\Http\Controllers\Custom\ServiceController;
+use App\Http\Controllers\Custom\DemoestimateController;
 
 
 Route::redirect('/', '/login');
@@ -111,3 +112,5 @@ Route::get('/services/{slug}', [ServiceController::class, 'show'])
     Route::get('/settings', function () {
     return view('custom.settings');
 })->name('custom.settings');
+
+Route::get('/demo-estimate', [DemoestimateController::class, 'index']);

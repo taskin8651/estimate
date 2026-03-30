@@ -58,8 +58,59 @@
   </div>
 </div>
 
-    <div class="pt-3"></div>
+ <div class="pt-3"></div>
 
+   <div class="container">
+  <div class="card mb-3">
+    <div class="py-3 text-center">
+  <h5 class="fw-bold mb-1">✨ Try Powerful Tools Instantly</h5>
+  <p class="text-muted small mb-0">
+    Build websites, create estimates & send bulk emails — all in one place
+  </p>
+</div>
+    <div class="card-body">
+      <div class="row g-3">
+
+        <!-- Build Website -->
+        <div class="col-4">
+          <a href="/build-website" class="text-decoration-none">
+            <div class="feature-card mx-auto text-center">
+              <div class="card mx-auto bg-gray p-3">
+                <i class="ti ti-world fs-2"></i>
+              </div>
+              <h6 class="mb-0 fz-14 mt-2 text-dark">Build Website</h6>
+            </div>
+          </a>
+        </div>
+
+        <!-- Estimate -->
+        <div class="col-4">
+          <a href="/demo-estimate" class="text-decoration-none">
+            <div class="feature-card mx-auto text-center">
+              <div class="card mx-auto bg-gray p-3">
+                <i class="ti ti-calculator fs-2"></i>
+              </div>
+              <h6 class="mb-0 fz-14 mt-2 text-dark">Estimate</h6>
+            </div>
+          </a>
+        </div>
+
+        <!-- Bulk Email -->
+        <div class="col-4">
+          <a href="/bulk-email" class="text-decoration-none">
+            <div class="feature-card mx-auto text-center">
+              <div class="card mx-auto bg-gray p-3">
+                <i class="ti ti-mail fs-2"></i>
+              </div>
+              <h6 class="mb-0 fz-14 mt-2 text-dark">Bulk Email</h6>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
 
   <div class="page-content-wrapper py-3">
   <div class="blog-wrapper">
