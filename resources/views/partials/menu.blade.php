@@ -182,15 +182,15 @@
 
 
 {{-- ================= CMS MENU ================= --}}
-@canany(['hero_access','service_access','pricing_access','testimonial_access','brand_access','gallery_access'])
+@canany(['hero_access','service_access','pricing_access','testimonial_access','brand_access','gallery_access','post_access'])
 <div x-data="{ 
-        open: {{ request()->is('admin/hero*') || request()->is('admin/services*') || request()->is('admin/pricing*') || request()->is('admin/testimonials*') || request()->is('admin/brands*') || request()->is('admin/gallery*') ? 'true' : 'false' }} 
+        open: {{ request()->is('admin/hero*') || request()->is('admin/services*') || request()->is('admin/pricing*') || request()->is('admin/testimonials*') || request()->is('admin/brands*') || request()->is('admin/gallery*') || request()->is('admin/posts*') ? 'true' : 'false' }} 
     }">
 
     <button @click="open = !open"
             class="group w-full flex items-center justify-between px-3 py-2 rounded transition
                    hover:bg-slate-800
-                   {{ request()->is('admin/hero*') || request()->is('admin/services*') || request()->is('admin/pricing*') || request()->is('admin/testimonials*') || request()->is('admin/brands*')
+                   {{ request()->is('admin/hero*') || request()->is('admin/services*') || request()->is('admin/pricing*') || request()->is('admin/testimonials*') || request()->is('admin/brands*' ) || request()->is('admin/gallery*') || request()->is('admin/posts*')
                         ? 'bg-slate-800 text-white'
                         : '' }}">
 
@@ -271,6 +271,16 @@
                     ? 'bg-slate-800 text-white'
                     : 'hover:bg-slate-800 hover:pl-4' }}">
                 Gallery
+            </a>
+        @endcan
+        {{-- Posts --}}
+        @can('post_access')
+            <a href="{{ route('admin.posts.index') }}"
+               class="block px-3 py-2 rounded transition
+               {{ request()->is('admin/posts*')
+                    ? 'bg-slate-800 text-white'
+                    : 'hover:bg-slate-800 hover:pl-4' }}">
+                Posts
             </a>
         @endcan
 

@@ -73,7 +73,7 @@
 
         <!-- Build Website -->
         <div class="col-4">
-          <a href="/build-website" class="text-decoration-none">
+          <a href="{{ route('posts.page') }}" class="text-decoration-none">
             <div class="feature-card mx-auto text-center">
               <div class="card mx-auto bg-gray p-3">
                 <i class="ti ti-world fs-2"></i>

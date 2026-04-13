@@ -6,6 +6,7 @@ use App\Http\Controllers\Custom\ServiceController;
 use App\Http\Controllers\Custom\DemoestimateController;
 
 
+
 Route::redirect('/', '/login');
 Route::get('/home', function () {
     if (session('status')) {
@@ -71,6 +72,7 @@ Route::post('estimates/{estimate}/template',
     Route::resource('testimonials', TestimonialController::class);
     Route::resource('brands', BrandController::class);
      Route::resource('gallery', GalleryController::class);
+        Route::resource('posts', PostController::class);
 
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
@@ -104,6 +106,10 @@ Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.page'
 // List page
 Route::get('/services', [ServiceController::class, 'index'])
     ->name('services.page');
+
+
+Route::get('/posts', [App\Http\Controllers\Custom\PostController::class,'index'])->name('posts.page');
+Route::get('/post/{slug}', [App\Http\Controllers\Custom\PostController::class,'show'])->name('post.details');
 
 // Detail page (optional)
 Route::get('/services/{slug}', [ServiceController::class, 'show'])
