@@ -6,7 +6,7 @@
 
   <!-- Header -->
   <div class="container mb-3">
-    <h4 class="fw-bold">All Posts</h4>
+    <h4 class="fw-bold">Our Projects</h4>
   </div>
 
   <!-- Posts List -->

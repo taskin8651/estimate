@@ -108,8 +108,8 @@ Route::get('/services', [ServiceController::class, 'index'])
     ->name('services.page');
 
 
-Route::get('/posts', [App\Http\Controllers\Custom\PostController::class,'index'])->name('posts.page');
-Route::get('/post/{slug}', [App\Http\Controllers\Custom\PostController::class,'show'])->name('post.details');
+Route::get('/our-projects', [App\Http\Controllers\Custom\PostController::class,'index'])->name('posts.page');
+Route::get('/our-projects/{slug}', [App\Http\Controllers\Custom\PostController::class,'show'])->name('post.details');
 
 // Detail page (optional)
 Route::get('/services/{slug}', [ServiceController::class, 'show'])
