@@ -10,70 +10,75 @@
   </div>
 
   <!-- Posts List -->
-  <div class="top-products-area product-list-wrap">
-    <div class="container">
-      <div class="row g-3">
+ <div class="top-products-area product-list-wrap">
+  <div class="container">
+    <div class="row g-3">
 
-        @forelse($posts as $post)
+      @forelse($posts as $post)
 
-        <div class="col-12">
-          <div class="card single-product-card shadow-sm">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
+      <div class="col-12">
+        <div class="card single-product-card">
+          <div class="card-body">
+            
+            <!-- 👇 Important: align-items-start (mobile fix) -->
+            <div class="d-flex align-items-start">
 
-                <!-- Image -->
-                <div class="card-side-img">
-                  <a class="product-thumbnail d-block"
-                     href="{{ route('post.details',$post->slug) }}">
+              <!-- Image -->
+              <div class="card-side-img me-2">
+                <a class="product-thumbnail d-block"
+                   href="{{ route('post.details',$post->slug) }}">
 
-                    @if($post->getFirstMediaUrl('images'))
-                      <img src="{{ $post->getFirstMediaUrl('images') }}" alt="">
-                    @else
-                      <img src="https://via.placeholder.com/100x100" alt="">
-                    @endif
+                  @if($post->getFirstMediaUrl('images'))
+                    <img src="{{ $post->getFirstMediaUrl('images') }}" alt=""
+                         style="width:80px;height:80px;object-fit:cover;">
+                  @else
+                    <img src="https://via.placeholder.com/100x100" alt=""
+                         style="width:80px;height:80px;object-fit:cover;">
+                  @endif
 
-                    <span class="badge bg-primary">New</span>
-                  </a>
-                </div>
+                  <span class="badge bg-primary">New</span>
+                </a>
+              </div>
 
-                <!-- Content -->
-                <div class="card-content px-4 py-2">
+              <!-- Content -->
+              <div class="card-content flex-grow-1 px-2">
 
-                  <!-- Title -->
-                  <a class="product-title d-block text-truncate mt-0 fw-bold"
-                     href="{{ route('post.details',$post->slug) }}">
-                    {{ $post->title }}
-                  </a>
+                <!-- Title -->
+                <a class="product-title d-block text-truncate fw-bold"
+                   href="{{ route('post.details',$post->slug) }}">
+                   {{ $post->title }}
+                </a>
 
-                  <!-- Short Description -->
-                  <p class="text-muted mb-2">
-                    {{ \Illuminate\Support\Str::limit(strip_tags($post->content), 80) }}
-                  </p>
+                <!-- Description -->
+                <p class="text-muted small mb-2">
+                  {{ \Illuminate\Support\Str::limit(strip_tags($post->content), 60) }}
+                </p>
 
-                  <!-- Button -->
-                  <a class="btn btn-primary btn-sm"
-                     href="{{ route('post.details',$post->slug) }}">
-                    Read More
-                  </a>
-
-                </div>
+                <!-- Button -->
+                <a class="btn btn-primary btn-sm"
+                   href="{{ route('post.details',$post->slug) }}">
+                  Read More
+                </a>
 
               </div>
+
             </div>
+
           </div>
         </div>
-
-        @empty
-
-        <div class="col-12 text-center">
-          <p>No Posts Found</p>
-        </div>
-
-        @endforelse
-
       </div>
+
+      @empty
+
+      <div class="col-12 text-center">
+        <p>No Posts Found</p>
+      </div>
+
+      @endforelse
+
     </div>
   </div>
+</div>
 
 </div>
 
