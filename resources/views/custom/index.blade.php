@@ -19,6 +19,23 @@
         aria-label="Close"></button>
     </div>
 
+  <script>
+document.getElementById('installAffan').addEventListener('click', function () {
+
+    const apkUrl = "{{ asset('assets/app/msasuite.apk') }}";
+
+    alert("Your download is starting. Please allow 'Unknown Sources' to install the app.");
+
+    const link = document.createElement('a');
+    link.href = apkUrl;
+    link.download = "msasuite.apk";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+});
+</script>
+
     <!-- Tiny Slider One Wrapper -->
  <div class="tiny-slider-one-wrapper" dir="ltr">
   <div class="tiny-slider-one">
