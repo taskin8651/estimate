@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -39,7 +40,7 @@ class PostController extends Controller
         ]);
 
         // 🖼️ Multiple Images Upload
-        if ($request->hasFile('images')) {
+         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $post->addMedia($image)->toMediaCollection('images');
             }
@@ -54,30 +55,50 @@ class PostController extends Controller
         return view('admin.posts.edit', compact('post'));
     }
 
-    // 🔄 Update Post
-    public function update(Request $request, Post $post)
-    {
-        $request->validate([
-            'title' => 'required',
-            'content' => 'nullable',
-            'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048'
-        ]);
+ 
 
-        $post->update([
-            'title' => $request->title,
-            'slug' => Str::slug($request->title),
-            'content' => $request->content,
-        ]);
+public function update(Request $request, Post $post)
+{
+    // ✅ Validation
+    $request->validate([
+        'title' => 'required',
+        'content' => 'nullable',
+        'images' => 'nullable|array',
+        'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:4096'
+    ]);
 
-        // 🖼️ Add New Images
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
+    // ✅ Update Post
+    $post->update([
+        'title' => $request->title,
+        'slug' => Str::slug($request->title),
+        'content' => $request->content,
+    ]);
+
+    // ❌ DELETE selected images
+    if ($request->has('delete_images')) {
+        foreach ($request->delete_images as $mediaId) {
+            $media = Media::find($mediaId);
+
+            // extra safety (sirf isi post ka media delete ho)
+            if ($media && $media->model_id == $post->id) {
+                $media->delete();
+            }
+        }
+    }
+
+    // 🖼️ ADD new images
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            if ($image->isValid()) {
                 $post->addMedia($image)->toMediaCollection('images');
             }
         }
-
-        return redirect()->route('admin.posts.index')->with('success', 'Post Updated');
     }
+
+    return redirect()
+        ->route('admin.posts.index')
+        ->with('success', 'Post Updated Successfully');
+}
 
     // ❌ Delete Post
     public function destroy(Post $post)
